@@ -7,7 +7,12 @@
         "build": "tsc && vite build",
         "preview": "vite preview"
     },
+    "dependencies": {
+        "lil-gui": "^0.16.1",
+        "pixi.js": "^6.0.0-X"
+    },
     "devDependencies": {
+        "pixi-filters": "4.1.6",
         "typescript": "^4.5.4",
         "vite": "^2.9.5"
     }

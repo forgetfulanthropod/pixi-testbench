@@ -109,24 +109,24 @@ export default class DemoApplication extends Application {
         this.pond.addChild(this.bg);
 
         // Create and add the fish
-        for (let i = 0; i < this.fishCount; i++) {
-            const id = `fish${(i % 4) + 1}`;
-            const fish = new Sprite(resources[id].texture);
+        // for (let i = 0; i < this.fishCount; i++) {
+        //     const id = `fish${(i % 4) + 1}`;
+        //     const fish = new Sprite(resources[id].texture);
 
-            fish.anchor.set(0.5);
-            fish.filters = this.fishFilters;
+        //     fish.anchor.set(0.5);
+        //     fish.filters = this.fishFilters;
 
-            fish.direction = Math.random() * Math.PI * 2;
-            fish.speed = 2 + (Math.random() * 2);
-            fish.turnSpeed = Math.random() - 0.8;
+        //     fish.direction = Math.random() * Math.PI * 2;
+        //     fish.speed = 2 + (Math.random() * 2);
+        //     fish.turnSpeed = Math.random() - 0.8;
 
-            fish.x = Math.random() * bounds.width;
-            fish.y = Math.random() * bounds.height;
+        //     fish.x = Math.random() * bounds.width;
+        //     fish.y = Math.random() * bounds.height;
 
-            fish.scale.set(0.8 + (Math.random() * 0.3));
-            this.pond.addChild(fish);
-            this.fishes.push(fish);
-        }
+        //     fish.scale.set(0.8 + (Math.random() * 0.3));
+        //     this.pond.addChild(fish);
+        //     this.fishes.push(fish);
+        // }
 
         // Setup the tiling sprite
         // this.overlay = new TilingSprite(
@@ -143,7 +143,7 @@ export default class DemoApplication extends Application {
         this.handleResize();
 
         // Handle fish animation
-        this.ticker.add(this.animate, this);
+        // this.ticker.add(this.animate, this);
     }
 
     /**
@@ -196,45 +196,45 @@ export default class DemoApplication extends Application {
      * Animate the fish, overlay and filters (if applicable)
      * @param {number} delta - % difference in time from last frame render
      */
-    animate(delta) {
-        this.animateTimer += delta;
+    // animate(delta) {
+    //     this.animateTimer += delta;
 
-        const { bounds, animateTimer } = this;
+    //     const { bounds, animateTimer } = this;
 
-        this.events.emit('animate', delta, animateTimer);
+    //     this.events.emit('animate', delta, animateTimer);
 
-        if (!this.animating) {
-            return;
-        }
+    //     if (!this.animating) {
+    //         return;
+    //     }
 
-        // Animate the overlay
-        // overlay.tilePosition.x = animateTimer * -1;
-        // overlay.tilePosition.y = animateTimer * -1;
+    //     // Animate the overlay
+    //     // overlay.tilePosition.x = animateTimer * -1;
+    //     // overlay.tilePosition.y = animateTimer * -1;
 
-        for (let i = 0; i < this.fishes.length; i++) {
-            const fish = this.fishes[i];
+    //     for (let i = 0; i < this.fishes.length; i++) {
+    //         const fish = this.fishes[i];
 
-            fish.direction += fish.turnSpeed * 0.01;
+    //         fish.direction += fish.turnSpeed * 0.01;
 
-            fish.x += Math.sin(fish.direction) * fish.speed;
-            fish.y += Math.cos(fish.direction) * fish.speed;
+    //         fish.x += Math.sin(fish.direction) * fish.speed;
+    //         fish.y += Math.cos(fish.direction) * fish.speed;
 
-            fish.rotation = -fish.direction - (Math.PI / 2);
+    //         fish.rotation = -fish.direction - (Math.PI / 2);
 
-            if (fish.x < bounds.x) {
-                fish.x += bounds.width;
-            }
-            if (fish.x > bounds.x + bounds.width) {
-                fish.x -= bounds.width;
-            }
-            if (fish.y < bounds.y) {
-                fish.y += bounds.height;
-            }
-            if (fish.y > bounds.y + bounds.height) {
-                fish.y -= bounds.height;
-            }
-        }
-    }
+    //         if (fish.x < bounds.x) {
+    //             fish.x += bounds.width;
+    //         }
+    //         if (fish.x > bounds.x + bounds.width) {
+    //             fish.x -= bounds.width;
+    //         }
+    //         if (fish.y < bounds.y) {
+    //             fish.y += bounds.height;
+    //         }
+    //         if (fish.y > bounds.y + bounds.height) {
+    //             fish.y -= bounds.height;
+    //         }
+    //     }
+    // }
 
     /**
      * Add a new filter

@@ -24,13 +24,13 @@ const manifest = [
     // { name: 'lightmap', url: 'images/lightmap.png' },
     // { name: 'colormap', url: 'images/colormap.png' },
 
-    { name: 'background', url: 'images/displacement_BG.jpg' },
+    { name: 'background', url: 'images/cave-final.png' },
     // { name: 'overlay', url: 'images/overlay.png' },
     { name: 'map', url: 'images/displacement_map.png' },
-    { name: 'fish1', url: 'images/displacement_fish1.png' },
-    { name: 'fish2', url: 'images/displacement_fish2.png' },
-    { name: 'fish3', url: 'images/displacement_fish3.png' },
-    { name: 'fish4', url: 'images/displacement_fish4.png' },
+    // { name: 'fish1', url: 'images/displacement_fish1.png' },
+    // { name: 'fish2', url: 'images/displacement_fish2.png' },
+    // { name: 'fish3', url: 'images/displacement_fish3.png' },
+    // { name: 'fish4', url: 'images/displacement_fish4.png' },
     { name: 'lightmap', url: 'images/lightmap.png' },
     { name: 'colormap', url: 'images/colormap.png' },
 ];

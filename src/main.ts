@@ -1,7 +1,8 @@
+
 import './style.css'
 import DemoApplication from './DemoApplication';
 import * as filters from './filters';
-
+import * as zip from '@zip.js/zip.js'
 // const app = document.querySelector<HTMLDivElement>('#app')!
 
 // app.innerHTML = `
@@ -60,9 +61,23 @@ container.ondragleave = (e) => {
 }
 
 // fileInput.onchange = () => console.log('dropped')
-container.ondrop = (e) => {
+container.ondrop = async(e) => {
     e.preventDefault()
     
     dragHover.style.opacity = '0'
     console.log('dropped')
+
+    console.log({files: e.dataTransfer?.files})
+    if (e.dataTransfer?.files.length !== 1) {
+        alert('sorry, must drop one .png or .zip')
+        return
+    }
+
+    const entries = await getEntries(e.dataTransfer?.files?.[0] as Blob, {})
+
+    console.log({entries})
+}
+
+function getEntries(file: Blob, options: zip.ZipReaderGetEntriesOptions) {
+    return (new zip.ZipReader(new zip.BlobReader(file))).getEntries(options);
 }

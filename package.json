@@ -8,6 +8,7 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@zip.js/zip.js": "^2.4.10",
         "lil-gui": "^0.16.1",
         "pixi.js": "^6.0.0-X"
     },

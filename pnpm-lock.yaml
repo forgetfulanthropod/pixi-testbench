@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@zip.js/zip.js': ^2.4.10
   lil-gui: ^0.16.1
   pixi-filters: 4.1.6
   pixi.js: ^6.0.0-X
@@ -8,6 +9,7 @@ specifiers:
   vite: ^2.9.5
 
 dependencies:
+  '@zip.js/zip.js': 2.4.10
   lil-gui: 0.16.1
   pixi.js: 6.3.0
 
@@ -698,6 +700,10 @@ packages:
 
   /@types/offscreencanvas/2019.6.4:
     resolution: {integrity: sha512-u8SAgdZ8ROtkTF+mfZGOscl0or6BSj9A4g37e6nvxDc+YB/oDut0wHkK2PBBiC2bNR8TS0CPV+1gAk4fNisr1Q==}
+    dev: false
+
+  /@zip.js/zip.js/2.4.10:
+    resolution: {integrity: sha512-lhlDPfkG8iMsAE7CNTu6fqFZp/qySEUIGBLXQQA0RNfNtgCt7SlkaGAwX0nKaCwMMNqw+wDrTJIP8gOR7uxqEg==}
     dev: false
 
   /earcut/2.2.3:

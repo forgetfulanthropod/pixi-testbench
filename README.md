@@ -1,6 +1,6 @@
 # Pixi Testbench
 
-Drag and drop pngs, spine export .zip, or after effects export .zip.
+Drag and drop pngs, spine exports in a .zip (.json, .atlas, .png(s)), or after effects export .zip.
 
 powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte), deployed to [Vercel](https://vercel.com).
 

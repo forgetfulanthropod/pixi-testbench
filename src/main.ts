@@ -10,6 +10,9 @@ import * as filters from './filters';
 // `
 // import './ga';
 
+const container = document.querySelector<HTMLElement>('#container')!
+const dragHover = document.querySelector<HTMLDivElement>('.drag-enter')!
+
 
 const app = new DemoApplication();
 const manifest = [
@@ -42,3 +45,24 @@ app.load(manifest, () => {
         filters[i].call(app);
     }
 });
+
+container.ondragover = (e) => {
+    e.preventDefault() // necessary
+    
+}
+
+container.ondragenter = (e) => {
+    dragHover.style.opacity = '1'
+}
+
+container.ondragleave = (e) => {
+    dragHover.style.opacity = '0'
+}
+
+// fileInput.onchange = () => console.log('dropped')
+container.ondrop = (e) => {
+    e.preventDefault()
+    
+    dragHover.style.opacity = '0'
+    console.log('dropped')
+}

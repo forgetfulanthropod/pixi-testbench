@@ -41,6 +41,21 @@ body {
     padding: 10px 0;
 }
 
+.drag-enter {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    text-align: center;
+    line-height: 100vh;
+    color: #ddd;
+    font-size: 32vw;
+    background: rgba(0, 0, 0, .7);
+    opacity: 0;
+}
+
 .lil-gui.root {
     top: 89px !important;
     max-height: calc(100% - 89px);

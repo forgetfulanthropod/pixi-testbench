@@ -2,8 +2,8 @@ import "./style.css"
 import DemoApplication from "./DemoApplication"
 import * as filters from "./filters"
 import * as zip from "@zip.js/zip.js"
-import * as PIXI from "pixi.js"
-import { LoaderResource } from "pixi.js"
+// import * as PIXI from "pixi.js"
+// import { LoaderResource } from "pixi.js"
 
 import backgroundUrl from "/images/cave-final.png"
 import displacementMapUrl from "/images/displacement_map.png"
@@ -32,7 +32,7 @@ const manifest = [
     // { name: 'fish4', url: '/green_jester-200-475SHUVH.png' },
     // { name: 'lightmap', url: 'images/lightmap.png' },
     // { name: 'colormap', url: 'images/colormap.png' },
-    
+
     // { name: 'overlay', url: 'images/overlay.png' },
     // { name: 'fish1', url: 'images/displacement_fish1.png' },
     // { name: 'fish2', url: 'images/displacement_fish2.png' },
@@ -57,11 +57,11 @@ container.ondragover = (e) => {
     e.preventDefault() // necessary
 }
 
-container.ondragenter = (e) => {
+container.ondragenter = () => {
     dragHover.style.opacity = "1"
 }
 
-container.ondragleave = (e) => {
+container.ondragleave = () => {
     dragHover.style.opacity = "0"
 }
 
@@ -86,7 +86,7 @@ container.ondrop = async (e) => {
     const isPng = file.type === "image/png"
 
     if (isPng) {
-        loadPng(file)
+        // loadPng(file)
     }
 
     const isZip = file.type === "application/zip"
@@ -114,28 +114,28 @@ container.ondrop = async (e) => {
 //         }
 // }
 
-async function f(file: File) {
-    const image = new Image()
-    const fr = new FileReader()
-    fr.readAsDataURL(file)
-    fr.onload = (evt) => {
-        image.src = evt.target.result
-        image.onload = () => {
-            const loadTexture = new PIXI.Texture(new PIXI.BaseTexture(image))
-            const loadSprite = new PIXI.Sprite(loadTexture)
-            app.stage.addChild(loadSprite)
-        }
-    }
-}
+// async function f(file: File) {
+//     // const image = new Image()
+//     // const fr = new FileReader()
+//     // fr.readAsDataURL(file)
+//     // fr.onload = (evt) => {
+//     //     image.src = evt.target.result
+//     //     image.onload = () => {
+//     //         const loadTexture = new PIXI.Texture(new PIXI.BaseTexture(image))
+//     //         const loadSprite = new PIXI.Sprite(loadTexture)
+//     //         app.stage.addChild(loadSprite)
+//     //     }
+//     // }
+// }
 
-async function loadPng(file: File) {
-    app.loader.add(await file.arrayBuffer(), {
-        xhrType: LoaderResource.XHR_RESPONSE_TYPE.BUFFER,
-    })
-    app.loader.load(() => {
-        console.log("loaded!!!!")
-    })
-}
+// async function loadPng(file: File) {
+    // app.loader.add(await file.arrayBuffer(), {
+    //     xhrType: LoaderResource.XHR_RESPONSE_TYPE.BUFFER,
+    // })
+    // app.loader.load(() => {
+    //     console.log("loaded!!!!")
+    // })
+// }
 
 async function loadZip(file: File) {
     const entries = await getEntries(file as Blob, {})

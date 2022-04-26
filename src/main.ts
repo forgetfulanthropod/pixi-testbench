@@ -7,10 +7,10 @@ import backgroundUrl from "/images/cave-final.png"
 import displacementMapUrl from "/images/displacement_map.png"
 import lightMapUrl from "/images/lightmap.png"
 import colorMapUrl from "/images/colormap.png"
-import { Application, Loader, Texture } from "pixi.js"
+
 import { bindFileDragging } from "./bindFileDragging"
 
-
+//@ts-expect-error
 window.PIXI = PIXI
 // const app = document.querySelector<HTMLDivElement>('#app')!
 
@@ -23,22 +23,6 @@ window.PIXI = PIXI
 const app = new DemoApplication()
 
 export const manifest = [
-    // { name: 'background', url: '/Frog_Knight_sprite-200-6LOWXNDL.png' },
-    // // { name: 'background', url: '/Frog_Knight_sprite-200-6LOWXNDL.png' },
-    // { name: 'overlay', url: 'images/overlay.png' },
-    // { name: 'map', url: 'images/displacement_map.png' },
-    // { name: 'fish1', url: '/Frog_Knight_sprite-200-6LOWXNDL.png' },
-    // { name: 'fish2', url: '/FrogWizard-cropped-200-OJOSIGV5.png' },
-    // { name: 'fish3', url: '/Gnome_hooligan-200-NRGJZ24H.png' },
-    // { name: 'fish4', url: '/green_jester-200-475SHUVH.png' },
-    // { name: 'lightmap', url: 'images/lightmap.png' },
-    // { name: 'colormap', url: 'images/colormap.png' },
-
-    // { name: 'overlay', url: 'images/overlay.png' },
-    // { name: 'fish1', url: 'images/displacement_fish1.png' },
-    // { name: 'fish2', url: 'images/displacement_fish2.png' },
-    // { name: 'fish3', url: 'images/displacement_fish3.png' },
-    // { name: 'fish4', url: 'images/displacement_fish4.png' },
 
     { name: "background", url: backgroundUrl },
     { name: "map", url: displacementMapUrl },

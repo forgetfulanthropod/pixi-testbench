@@ -3,5 +3,6 @@
         "activityBar.background": "#133418",
         "titleBar.activeBackground": "#1A4922",
         "titleBar.activeForeground": "#F7FCF8"
-    }
+    },
+    "typescript.format.semicolons": "remove"
 }

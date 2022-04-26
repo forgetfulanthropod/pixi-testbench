@@ -296,7 +296,7 @@ export default class DemoApplication extends Application {
 
         // Track enabled change with analytics
         folder.add(filter, 'enabled').onChange((enabled) => {
-            ga('send', 'event', id, enabled ? 'enabled' : 'disabled');
+            // ga('send', 'event', id, enabled ? 'enabled' : 'disabled');
 
             app.events.emit('enable', enabled);
 

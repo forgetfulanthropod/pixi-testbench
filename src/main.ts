@@ -32,14 +32,15 @@ const manifest = [
     // { name: 'fish4', url: '/green_jester-200-475SHUVH.png' },
     // { name: 'lightmap', url: 'images/lightmap.png' },
     // { name: 'colormap', url: 'images/colormap.png' },
-
-    { name: "background", url: backgroundUrl },
+    
     // { name: 'overlay', url: 'images/overlay.png' },
-    { name: "map", url: displacementMapUrl },
     // { name: 'fish1', url: 'images/displacement_fish1.png' },
     // { name: 'fish2', url: 'images/displacement_fish2.png' },
     // { name: 'fish3', url: 'images/displacement_fish3.png' },
     // { name: 'fish4', url: 'images/displacement_fish4.png' },
+
+    { name: "background", url: backgroundUrl },
+    { name: "map", url: displacementMapUrl },
     { name: "lightmap", url: lightMapUrl },
     { name: "colormap", url: colorMapUrl },
 ]

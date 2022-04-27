@@ -111,7 +111,6 @@ async function loadZip(file: File, app: Application) {
     const skeleton = new SkeletonJson(
         new AtlasAttachmentLoader(
             new TextureAtlas(
-
                 await fetch(atlasFile.url).then(r => r.text()),
                 (path, loaderFunction) => {
 
@@ -128,11 +127,36 @@ async function loadZip(file: File, app: Application) {
     console.log(skeleton)
 
     const animation = new Spine(skeleton)
+
+    animation.scale.set(.5)
+    animation.state.setAnimation(0, skeleton.animations[0].name, true)
+
+    let animationIndex = 0
+    toggleAnimation()
+
+    
+    animation.interactive = true
+    animation.on('pointerdown', () => {
+        toggleAnimation()
+    })
+    
     app.stage.addChild(animation)
-    app.start()
+    // app.start()
 
 
-        // add the animation to the scene and render...
+
+
+    function toggleAnimation() {
+        console.log('toggling animation', {animationIndex})
+        if (skeleton.animations.length >= animationIndex) animationIndex = 0
+
+        animation.state.setAnimation(0, skeleton.animations[animationIndex].name, true)
+        
+        animationIndex++
+
+    }
+
+    // add the animation to the scene and render...
     
     // if (animation.state.hasAnimation('run')) {
     //     // run forever, little boy!

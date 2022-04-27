@@ -60,19 +60,11 @@ export function bindFileDragging(app: DemoApplication, container: HTMLElement, d
     }
 
     async function loadPng(file: File) {
-        const image = document.createElement('img')
-        
         const url = URL.createObjectURL(file)
         
-        image.onload = () => {
-            const loadTexture = new PIXI.Texture(new PIXI.BaseTexture(image))
-            const loadSprite = new PIXI.Sprite(loadTexture)
-            loadSprite.scale.set(.5)
-            // todo: centering
-            app.stage.addChild(loadSprite)
-        }
+        const loadSprite = PIXI.Sprite.from(url)
 
-        image.src = url
+        app.stage.addChild(loadSprite)
     }
 
     async function loadZip(file: File) {

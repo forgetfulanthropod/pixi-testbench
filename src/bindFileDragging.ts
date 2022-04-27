@@ -4,18 +4,10 @@ import * as zip from "@zip.js/zip.js"
 // import { LoaderResource, Sprite } from "pixi.js"
 import * as PIXI from "pixi.js"
 import { manifest } from "./main"
-import { Application, BaseTexture, Sprite, Texture, TextureLoader } from "pixi.js"
+import { Application, Sprite } from "pixi.js"
 import { Spine, TextureAtlas } from "pixi-spine"
-import { SpineParser } from 'pixi-spine';
 import { AtlasAttachmentLoader, Skeleton, SkeletonData, SkeletonJson } from "@pixi-spine/runtime-4.0"
-// export {SpineParser};
-// export * from 'pixi-spine';
 
-
-
-// (new SpineParser()).createJsonParser()
-
-SpineParser.registerLoaderPlugin();
 
 export function bindFileDragNDrop(app: DemoApplication, container: HTMLElement, dragHover: HTMLDivElement) {
 
@@ -110,13 +102,10 @@ async function loadZip(file: File, app: Application) {
     
     // files.forEach(file => app.loader.add(file.name, file.url))
 
-    app.loader.load(async function (loader, resources) {
+    app.loader.load(async function (_loader, _resources) {
         const jsonFile = files.find(file => file.name.includes('.json'))!
         const atlasFile = files.find(file => file.name.includes('.atlas'))!
-        console.log(JSON.stringify({jsonFile, files}))
-        console.log({resource: resources?.[jsonFile.name]})
-        // const animation = new Spine(resources?.[jsonFile.name].spineData)
-        // console.log('parsed data', (new SpineParser).createJsonParser())
+
         console.log('about to parse data')
         console.log({
             skeletonJson: await fetch(jsonFile.url).then(r => r.json()), 
@@ -127,17 +116,9 @@ async function loadZip(file: File, app: Application) {
         const skel = new SkeletonJson(
             new AtlasAttachmentLoader(
                 new TextureAtlas(
-                    // atlasFile.url,
+
                     await fetch(atlasFile.url).then(r => r.text()),
                     (path, loaderFunction) => {
-                        // const texture = resources[path].data
-                        // console.log({path,loaderFunction, texture: new BaseTexture(texture)})
-                        // if (texture != null) loaderFunction(new BaseTexture(texture))
-
-                        // const whiteSprite = new Sprite(Texture.WHITE)
-                        // whiteSprite.width = 2000
-                        // whiteSprite.height = 2000
-                        // loaderFunction(whiteSprite.texture.baseTexture)
 
                         const imageUrl = files.find(file => file.name === path)!.url
 

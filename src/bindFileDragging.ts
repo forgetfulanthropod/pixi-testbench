@@ -5,7 +5,7 @@ import * as zip from "@zip.js/zip.js"
 import * as PIXI from "pixi.js"
 import { manifest } from "./main"
 
-export function bindFileDragging(app: DemoApplication, container: HTMLElement, dragHover: HTMLDivElement) {
+export function bindFileDragNDrop(app: DemoApplication, container: HTMLElement, dragHover: HTMLDivElement) {
 
     // Load resources then add filters
     app.load(manifest, () => {
@@ -33,18 +33,7 @@ export function bindFileDragging(app: DemoApplication, container: HTMLElement, d
 
         dragHover.style.opacity = "0"
 
-        const files = e.dataTransfer?.files
-
-        if (files == null)
-            throw new Error("no files!")
-
-        if (files.length !== 1) {
-            alert("sorry, must drop one \n.png \nor \n.zip (from spine or aftereffects)")
-            return
-        }
-
-        const file = files[0]
-        console.log("file 0: ", file)
+        const file = getFile(e)
 
         const isPng = file.type === "image/png"
 
@@ -58,24 +47,35 @@ export function bindFileDragging(app: DemoApplication, container: HTMLElement, d
             loadZip(file)
         }
     }
+}
 
-    async function loadPng(file: File) {
-        const url = URL.createObjectURL(file)
+function getFile(e: DragEvent): File {
+    const files = e.dataTransfer?.files
+
+    if (files == null || files.length !== 1) {
+        alert("sorry, must drop one \n.png \nor \n.zip (from spine or aftereffects)")
         
-        const loadSprite = PIXI.Sprite.from(url)
-
-        app.stage.addChild(loadSprite)
+        throw new Error("bad file drop?")
     }
 
-    async function loadZip(file: File) {
-        const entries = await getEntries(file as Blob, {})
-        console.log({ entries })
+    return files[0]
+}
 
-        // app.loadStaged(file)
-    }
+async function loadPng(file: File) {
+    const url = URL.createObjectURL(file)
+    
+    const loadSprite = PIXI.Sprite.from(url)
 
-    function getEntries(file: Blob, options: zip.ZipReaderGetEntriesOptions) {
-        return new zip.ZipReader(new zip.BlobReader(file)).getEntries(options)
-    }
+    app.stage.addChild(loadSprite)
+}
 
+async function loadZip(file: File) {
+    const entries = await getEntries(file as Blob, {})
+    console.log({ entries })
+
+    // app.loadStaged(file)
+}
+
+function getEntries(file: Blob, options: zip.ZipReaderGetEntriesOptions) {
+    return new zip.ZipReader(new zip.BlobReader(file)).getEntries(options)
 }

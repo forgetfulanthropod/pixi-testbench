@@ -8,7 +8,7 @@ import displacementMapUrl from "/images/displacement_map.png"
 import lightMapUrl from "/images/lightmap.png"
 import colorMapUrl from "/images/colormap.png"
 
-import { bindFileDragging } from "./bindFileDragging"
+import { bindFileDragNDrop } from "./bindFileDragging"
 
 //@ts-expect-error
 window.PIXI = PIXI
@@ -33,4 +33,4 @@ export const manifest = [
 const container = document.querySelector<HTMLElement>("#container")!
 const dragHover = document.querySelector<HTMLDivElement>(".drag-enter")!
 
-bindFileDragging(app, container, dragHover)
+bindFileDragNDrop(app, container, dragHover)

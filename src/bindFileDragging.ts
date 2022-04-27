@@ -108,7 +108,7 @@ async function loadZip(file: File, app: Application) {
     })
     
     new Skeleton(new SkeletonData())
-    const skel = new SkeletonJson(
+    const skeleton = new SkeletonJson(
         new AtlasAttachmentLoader(
             new TextureAtlas(
 
@@ -125,14 +125,9 @@ async function loadZip(file: File, app: Application) {
         await fetch(jsonFile.url).then(r => r.json())
     )
 
+    console.log(skeleton)
 
-    // console.log('parsed data', new TextureAtlas().addSpineAtlas(atlasFile.url))
-
-
-    // const animation = new Spine()
-    // const animation = new Spine((new SpineParser()).parseData(resources?.[jsonFile.name]).spineData)
-    // const animation = new Spine(new TextureAtlas(new File(atlasFile.url).stream()).)
-    const animation = new Spine(skel)
+    const animation = new Spine(skeleton)
     app.stage.addChild(animation)
     app.start()
 

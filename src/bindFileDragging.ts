@@ -98,49 +98,43 @@ async function loadZip(file: File, app: Application) {
         })
     )
 
-    app.loader.add(files)
-    
-    // files.forEach(file => app.loader.add(file.name, file.url))
+    const jsonFile = files.find(file => file.name.includes('.json'))!
+    const atlasFile = files.find(file => file.name.includes('.atlas'))!
 
-    app.loader.load(async function (_loader, _resources) {
-        const jsonFile = files.find(file => file.name.includes('.json'))!
-        const atlasFile = files.find(file => file.name.includes('.atlas'))!
-
-        console.log('about to parse data')
-        console.log({
-            skeletonJson: await fetch(jsonFile.url).then(r => r.json()), 
-            atlasText: await fetch(atlasFile.url).then(r => r.text()), 
-        })
-        
-        new Skeleton(new SkeletonData())
-        const skel = new SkeletonJson(
-            new AtlasAttachmentLoader(
-                new TextureAtlas(
-
-                    await fetch(atlasFile.url).then(r => r.text()),
-                    (path, loaderFunction) => {
-
-                        const imageUrl = files.find(file => file.name === path)!.url
-
-                        loaderFunction(Sprite.from(imageUrl).texture.baseTexture)
-                    }
-                )
-            )
-        ).readSkeletonData(
-            await fetch(jsonFile.url).then(r => r.json())
-        )
-
-
-        // console.log('parsed data', new TextureAtlas().addSpineAtlas(atlasFile.url))
-
-
-        // const animation = new Spine()
-        // const animation = new Spine((new SpineParser()).parseData(resources?.[jsonFile.name]).spineData)
-        // const animation = new Spine(new TextureAtlas(new File(atlasFile.url).stream()).)
-        const animation = new Spine(skel)
-        app.stage.addChild(animation)
-        app.start()
+    console.log('about to parse data')
+    console.log({
+        skeletonJson: await fetch(jsonFile.url).then(r => r.json()), 
+        atlasText: await fetch(atlasFile.url).then(r => r.text()), 
     })
+    
+    new Skeleton(new SkeletonData())
+    const skel = new SkeletonJson(
+        new AtlasAttachmentLoader(
+            new TextureAtlas(
+
+                await fetch(atlasFile.url).then(r => r.text()),
+                (path, loaderFunction) => {
+
+                    const imageUrl = files.find(file => file.name === path)!.url
+
+                    loaderFunction(Sprite.from(imageUrl).texture.baseTexture)
+                }
+            )
+        )
+    ).readSkeletonData(
+        await fetch(jsonFile.url).then(r => r.json())
+    )
+
+
+    // console.log('parsed data', new TextureAtlas().addSpineAtlas(atlasFile.url))
+
+
+    // const animation = new Spine()
+    // const animation = new Spine((new SpineParser()).parseData(resources?.[jsonFile.name]).spineData)
+    // const animation = new Spine(new TextureAtlas(new File(atlasFile.url).stream()).)
+    const animation = new Spine(skel)
+    app.stage.addChild(animation)
+    app.start()
 
 
         // add the animation to the scene and render...

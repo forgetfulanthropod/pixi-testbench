@@ -4,7 +4,7 @@ import * as zip from "@zip.js/zip.js"
 // import { LoaderResource, Sprite } from "pixi.js"
 import * as PIXI from "pixi.js"
 import { manifest } from "./main"
-import { Application, TextureLoader } from "pixi.js"
+import { Application, BaseTexture, Sprite, Texture, TextureLoader } from "pixi.js"
 import { Spine, TextureAtlas } from "pixi-spine"
 import { SpineParser } from 'pixi-spine';
 import { AtlasAttachmentLoader, Skeleton, SkeletonData, SkeletonJson } from "@pixi-spine/runtime-4.0"
@@ -124,13 +124,30 @@ async function loadZip(file: File, app: Application) {
         })
         
         new Skeleton(new SkeletonData())
-        const skel = new SkeletonJson(new AtlasAttachmentLoader(new TextureAtlas(
-            // atlasFile.url,
-            await fetch(atlasFile.url).then(r => r.text()),
-            (path, loaderFunction) => {
-                console.log({path,loaderFunction})
-            }
-        ))).readSkeletonData(await fetch(jsonFile.url).then(r => r.json()))
+        const skel = new SkeletonJson(
+            new AtlasAttachmentLoader(
+                new TextureAtlas(
+                    // atlasFile.url,
+                    await fetch(atlasFile.url).then(r => r.text()),
+                    (path, loaderFunction) => {
+                        // const texture = resources[path].data
+                        // console.log({path,loaderFunction, texture: new BaseTexture(texture)})
+                        // if (texture != null) loaderFunction(new BaseTexture(texture))
+
+                        // const whiteSprite = new Sprite(Texture.WHITE)
+                        // whiteSprite.width = 2000
+                        // whiteSprite.height = 2000
+                        // loaderFunction(whiteSprite.texture.baseTexture)
+
+                        const imageUrl = files.find(file => file.name === path)!.url
+
+                        loaderFunction(Sprite.from(imageUrl).texture.baseTexture)
+                    }
+                )
+            )
+        ).readSkeletonData(
+            await fetch(jsonFile.url).then(r => r.json())
+        )
 
 
         // console.log('parsed data', new TextureAtlas().addSpineAtlas(atlasFile.url))

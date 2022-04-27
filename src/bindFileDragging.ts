@@ -139,9 +139,9 @@ async function loadZip(file: File, app: Application) {
         // const animation = new Spine()
         // const animation = new Spine((new SpineParser()).parseData(resources?.[jsonFile.name]).spineData)
         // const animation = new Spine(new TextureAtlas(new File(atlasFile.url).stream()).)
-        // const animation = new Spine(skel)
-        // app.stage.addChild(animation)
-        // app.start()
+        const animation = new Spine(skel)
+        app.stage.addChild(animation)
+        app.start()
     })
 
 

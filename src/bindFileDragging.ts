@@ -4,12 +4,16 @@ import * as zip from "@zip.js/zip.js"
 // import { LoaderResource, Sprite } from "pixi.js"
 import * as PIXI from "pixi.js"
 import { manifest } from "./main"
-import { Application, Sprite } from "pixi.js"
+import { Application, Container, Sprite } from "pixi.js"
 import { Spine, TextureAtlas } from "pixi-spine"
 import { AtlasAttachmentLoader, Skeleton, SkeletonData, SkeletonJson } from "@pixi-spine/runtime-4.0"
 
 
-export function bindFileDragNDrop(app: DemoApplication, container: HTMLElement, dragHover: HTMLDivElement) {
+export function bindFileDragNDrop(
+    app: DemoApplication, 
+    container: HTMLElement, 
+    dragHover: HTMLDivElement
+) : () => void {
 
     // Load resources then add filters
     app.load(manifest, () => {
@@ -23,16 +27,22 @@ export function bindFileDragNDrop(app: DemoApplication, container: HTMLElement, 
         e.preventDefault() // necessary
     }
 
-    container.ondragenter = () => {
-        dragHover.style.opacity = "1"
-    }
+    dragHover.style.opacity = "1"
 
-    container.ondragleave = () => {
-        dragHover.style.opacity = "0"
-    }
+    // container.ondragenter = () => {
+    //     dragHover.style.opacity = "1"
+    // }
+
+    // container.ondragleave = () => {
+    //     dragHover.style.opacity = "0"
+    // }
+
+    // container.onclick = () => true
+    // container.onpointerenter = () => true
+    // container.onpointerleave = () => true
 
     // fileInput.onchange = () => console.log('dropped')
-    container.ondrop = async (e) => {
+    dragHover.ondrop = async (e) => {
         e.preventDefault()
 
         dragHover.style.opacity = "0"
@@ -50,6 +60,14 @@ export function bindFileDragNDrop(app: DemoApplication, container: HTMLElement, 
         if (isZip) {
             loadZip(file, app)
         }
+
+        dragHover.style.pointerEvents = 'none'
+        dragHover.style.opacity = '0'
+    }
+
+    return function reviveDragHover() {
+        dragHover.style.pointerEvents = 'auto'
+        dragHover.style.opacity = '1'
     }
 }
 
@@ -134,26 +152,23 @@ async function loadZip(file: File, app: Application) {
     let animationIndex = 0
     toggleAnimation()
 
+    ;(app.stage.children[0] as Container).addChild(animation)
     
+    animation.cursor = 'pointer'
     animation.interactive = true
     animation.on('pointerdown', () => {
         toggleAnimation()
     })
     
-    app.stage.addChild(animation)
     // app.start()
-
-
-
 
     function toggleAnimation() {
         console.log('toggling animation', {animationIndex})
-        if (skeleton.animations.length >= animationIndex) animationIndex = 0
+        if (animationIndex >= skeleton.animations.length) animationIndex = 0
 
         animation.state.setAnimation(0, skeleton.animations[animationIndex].name, true)
         
         animationIndex++
-
     }
 
     // add the animation to the scene and render...

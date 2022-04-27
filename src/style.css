@@ -74,3 +74,13 @@ body {
     margin: 8px auto 0;
     width: 80%;
 }
+
+#add-another {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    color: white;
+    text-shadow: black;
+    cursor: pointer;
+    pointer-events: all;
+}

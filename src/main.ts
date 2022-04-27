@@ -33,4 +33,9 @@ export const manifest = [
 const container = document.querySelector<HTMLElement>("#container")!
 const dragHover = document.querySelector<HTMLDivElement>(".drag-enter")!
 
-bindFileDragNDrop(app, container, dragHover)
+const reviveDragHover = bindFileDragNDrop(app, container, dragHover)
+
+document.querySelector<HTMLElement>("#add-another")!.onclick = () => {
+    console.log('reviving draghover..')
+    reviveDragHover()
+}

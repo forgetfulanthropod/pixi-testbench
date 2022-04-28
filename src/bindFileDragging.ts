@@ -9,11 +9,19 @@ import { Spine, TextureAtlas } from "pixi-spine"
 import { AtlasAttachmentLoader, Skeleton, SkeletonData, SkeletonJson } from "@pixi-spine/runtime-4.0"
 
 
+
+let screenHeight = 0 //document.getElementById('container').getBoundingClientRect().height
+
+let screenWidth = 0 //document.getElementById('container').getBoundingClientRect().width
+
 export function bindFileDragNDrop(
     app: DemoApplication, 
     container: HTMLElement, 
     dragHover: HTMLDivElement
 ) : () => void {
+
+    screenHeight = container.getBoundingClientRect().height
+    screenWidth = container.getBoundingClientRect().width
 
     // Load resources then add filters
     app.load(manifest, () => {
@@ -91,11 +99,13 @@ async function loadPng(file: File, app: Application) {
     app.stage.addChild(loadSprite)
 }
 
+type FileNamesAndUrls = {name: string, url: string}[]
+
 async function loadZip(file: File, app: Application) {
     const entries = await getEntries(file as Blob, {})
     console.log({ entries })
 
-    const files: {name: string, url: string}[] = []
+    const files: FileNamesAndUrls = []
     
     await Promise.all(
         entries.map(async entry => {
@@ -116,6 +126,12 @@ async function loadZip(file: File, app: Application) {
         })
     )
 
+    const spineOnlyFile = files.find(file => file.name.includes('.atlas'))!
+    if (spineOnlyFile != null)
+        await loadSpineFiles(files, app)
+}
+
+async function loadSpineFiles(files: FileNamesAndUrls, app: Application) {
     const jsonFile = files.find(file => file.name.includes('.json'))!
     const atlasFile = files.find(file => file.name.includes('.atlas'))!
 
@@ -147,6 +163,15 @@ async function loadZip(file: File, app: Application) {
     const animation = new Spine(skeleton)
 
     animation.scale.set(.5)
+
+    console.log({animationHeight: animation.height, screenHeight})
+    
+    if(animation.height > screenHeight * .9) animation.scale.set(screenHeight /  animation.height * .6 * .5)
+    const bounds = animation.getBounds()
+
+    if (bounds.left < -50) animation.x = -bounds.left + (screenWidth - animation.width) / 2
+    if (bounds.top < -50) animation.y = -bounds.top + (screenHeight - animation.height) / 2
+    
     animation.state.setAnimation(0, skeleton.animations[0].name, true)
 
     let animationIndex = 0
@@ -170,20 +195,7 @@ async function loadZip(file: File, app: Application) {
         
         animationIndex++
     }
-
-    // add the animation to the scene and render...
     
-    // if (animation.state.hasAnimation('run')) {
-    //     // run forever, little boy!
-    //     animation.state.setAnimation(0, 'run', true);
-    //     // dont run too fast
-    //     animation.state.timeScale = 0.1;
-    // }
-    
-
-    // app.stage.addChild(spine)
-
-    // app.loadStaged(file)
 }
 
 async function getURL(entry: zip.Entry, options = {}) {

@@ -56,6 +56,16 @@ body {
     opacity: 0;
 }
 
+.drag-enter input[type="file"] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
 .lil-gui.root {
     top: 89px !important;
     max-height: calc(100% - 89px);

@@ -36,21 +36,8 @@ export function bindFileDragNDrop(
     }
 
     dragHover.style.opacity = "1"
-
-    // container.ondragenter = () => {
-    //     dragHover.style.opacity = "1"
-    // }
-
-    // container.ondragleave = () => {
-    //     dragHover.style.opacity = "0"
-    // }
-
-    // container.onclick = () => true
-    // container.onpointerenter = () => true
-    // container.onpointerleave = () => true
-
-    // fileInput.onchange = () => console.log('dropped')
-    dragHover.ondrop = async (e) => {
+    
+    dragHover.querySelector('input')!.onchange = async (e) => {
         e.preventDefault()
 
         dragHover.style.opacity = "0"
@@ -79,8 +66,9 @@ export function bindFileDragNDrop(
     }
 }
 
-function getFile(e: DragEvent): File {
-    const files = e.dataTransfer?.files
+function getFile(e: Event): File {
+
+    const files = (e.target as HTMLInputElement).files
 
     if (files == null || files.length !== 1) {
         alert("sorry, must drop one \n.png \nor \n.zip (from spine or aftereffects)")

@@ -85,14 +85,28 @@ export default class DemoApplication extends Application {
         // this.ticker.add(this.animate, this);
 
         // this.gui.add({}, 'myFunction'); // Button
-        // this.gui
-        //     .add({
-        //         save() {
-        //             console.log('saving', { save: gui.save() })
-        //             localStorage.setItem('save', JSON.stringify(gui.save()))
-        //         }
-        //     }, 'save')
-        //     .name('Save')
+        this.gui
+            .add({
+                saveJson() {
+                    const guiSave = gui.save()
+
+                    const enabledFolders = {}
+                    Object.keys(guiSave.folders).filter(fKey => {
+                        return guiSave.folders[fKey].controllers.enabled
+                    }).forEach(fKey => {
+                        enabledFolders[fKey] = guiSave.folders[fKey]
+                    })
+
+                    const enabledFilters = {
+                        ...guiSave,
+                        folders: enabledFolders
+                    }
+                    console.log('saving', { enabledFilters })
+                    saveFile(JSON.stringify(enabledFilters), 'pixi-filters.json')
+                        // localStorage.setItem('save', JSON.stringify(gui.save()))
+                }
+            }, 'saveJson')
+            .name('Save as JSON')
 
 
         // this.gui
@@ -361,4 +375,19 @@ export default class DemoApplication extends Application {
 
         return filter;
     }
+}
+
+async function saveFile(blob, name = null) {
+
+    // create a new handle
+    const newHandle = await window.showSaveFilePicker({ suggestedName: name });
+
+    // create a FileSystemWritableFileStream to write to
+    const writableStream = await newHandle.createWritable()
+
+    // write our file
+    await writableStream.write(blob);
+
+    // close the file and write the contents to disk.
+    await writableStream.close();
 }

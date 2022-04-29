@@ -36,7 +36,7 @@ export function bindFileDragNDrop(
     }
 
     dragHover.style.opacity = "1"
-    
+
     dragHover.querySelector('input')!.onchange = async (e) => {
         e.preventDefault()
 
@@ -84,7 +84,7 @@ async function loadPng(file: File, app: Application) {
     
     const loadSprite = PIXI.Sprite.from(url)
 
-    app.stage.addChild(loadSprite)
+    ;(app.stage.children[0] as Container).addChild(loadSprite)
 }
 
 type FileNamesAndUrls = {name: string, url: string}[]

@@ -45,9 +45,9 @@ export function bindFileDragNDrop(
 
         const file = getFile(e)
 
-        const isPng = file.type === "image/png"
+        const isImage = ['png', 'jpg', 'jpeg'].includes(getExtension(file.name))
 
-        if (isPng) {
+        if (isImage) {
             loadPng(file, app)
         }
 
@@ -57,8 +57,14 @@ export function bindFileDragNDrop(
             loadZip(file, app)
         }
 
+        if (!isImage && !isZip) {
+            alert('must drop either an image or a .zip file.. ')
+            throw new Error('not a zip or image!!')
+        }
+
         dragHover.style.pointerEvents = 'none'
         dragHover.style.opacity = '0'
+
     }
 
     return function reviveDragHover() {

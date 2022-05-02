@@ -51,7 +51,7 @@ export function bindFileDragNDrop(
             loadPng(file, app)
         }
 
-        const isZip = file.type === "application/zip"
+        const isZip = getExtension(file.name) === 'zip'
 
         if (isZip) {
             loadZip(file, app)
@@ -114,7 +114,10 @@ async function loadZip(file: File, app: Application) {
                 // }
             );
 
-            files.push({name: entry.filename, url: blobURL})
+            const nameParts = entry.filename.split('/')
+            const filename = nameParts.length > 1 ? nameParts.slice(1).join('/') : entry.filename
+            console.log({filename})
+            files.push({name: filename, url: blobURL})
         })
     )
 
@@ -202,4 +205,8 @@ async function getURL(entry: zip.Entry, options = {}) {
 
 function getEntries(file: Blob, options: zip.ZipReaderGetEntriesOptions): Promise<zip.Entry[]> {
     return new zip.ZipReader(new zip.BlobReader(file)).getEntries(options)
+}
+
+function getExtension(filename: string): string {
+    return filename.split('.').at(-1)?.toLowerCase() ?? 'NONE'
 }

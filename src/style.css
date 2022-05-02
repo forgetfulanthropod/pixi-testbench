@@ -67,23 +67,12 @@ body {
     cursor: pointer;
 }
 
-.lil-gui.root {
-    top: 89px !important;
-    max-height: calc(100% - 89px);
-}
-
 .lil-gui .title {
     color: #999;
 }
 
 .lil-gui.enabled .title {
     color: #ea4080;
-}
-
-#logo img {
-    display: block;
-    margin: 8px auto 0;
-    width: 80%;
 }
 
 #add-another {

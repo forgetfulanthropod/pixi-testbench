@@ -30,6 +30,7 @@ export default class DemoApplication extends Application {
             height: initHeight,
             autoStart: false,
             backgroundColor: 0x000000,
+
         });
 
         settings.PRECISION_FRAGMENT = 'highp';

@@ -37,7 +37,8 @@ export function bindFileDragNDrop(
 
     dragHover.style.opacity = "1"
 
-    dragHover.querySelector('input')!.onchange = async (e) => {
+    dragHover.querySelector('input')!.oninput = async (e) => {
+        console.log('input here, ', {e})
         e.preventDefault()
 
         dragHover.style.opacity = "0"
@@ -96,7 +97,10 @@ async function loadZip(file: File, app: Application) {
     const files: FileNamesAndUrls = []
     
     await Promise.all(
-        entries.map(async entry => {
+        entries.filter(entry => 
+            !entry.filename.includes('__MACOSX')
+        )
+        .map(async entry => {
             if (entry == null) return
 
             const blobURL = await getURL(entry, 

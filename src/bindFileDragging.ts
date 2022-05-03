@@ -4,7 +4,7 @@ import * as zip from "@zip.js/zip.js"
 // import { LoaderResource, Sprite } from "pixi.js"
 import * as PIXI from "pixi.js"
 import { manifest } from "./main"
-import { Container, Sprite } from "pixi.js"
+import { Filter, Sprite } from "pixi.js"
 import { Spine, TextureAtlas } from "pixi-spine"
 import { AtlasAttachmentLoader, Skeleton, SkeletonData, SkeletonJson } from "@pixi-spine/runtime-4.0"
 import { DisplayMeta } from "./TestBench"
@@ -90,9 +90,29 @@ function getFile(e: Event): File {
 async function loadPng(file: File, app: Testbench) {
     const url = URL.createObjectURL(file)
 
-    const loadSprite = PIXI.Sprite.from(url)
+    const sprite = PIXI.Sprite.from(url)
 
-        ; (app.stage.children[0] as Container).addChild(loadSprite)
+    app.filteredContainer.addChild(sprite)
+
+    app.addNewImportControls({
+        name: file.name,
+        get(): DisplayMeta {
+            return {
+                x: sprite.x,
+                y: sprite.y,
+                scale: sprite.scale.x,
+            }
+        },
+        set(d: DisplayMeta) {
+            sprite.x = d.x
+            sprite.y = d.y
+
+            sprite.scale.set(d.scale, Math.abs(d.scale))
+        },
+        applyFilters(filters: Filter[]) {
+            sprite.filters = filters
+        },
+    })
 }
 
 type FileNamesAndUrls = { name: string, url: string }[]
@@ -168,8 +188,6 @@ async function loadSpineFiles(files: FileNamesAndUrls, app: Testbench) {
 
     animation.scale.set(.5)
 
-    console.log({ animationHeight: animation.height, screenHeight })
-
     if (animation.height > screenHeight * .9) animation.scale.set(screenHeight / animation.height * .6 * .5)
     const bounds = animation.getBounds()
 
@@ -181,7 +199,7 @@ async function loadSpineFiles(files: FileNamesAndUrls, app: Testbench) {
     let animationIndex = 0
     toggleAnimation()
 
-        ; (app.stage.children[0] as Container).addChild(animation)
+        ; app.filteredContainer.addChild(animation)
 
     animation.cursor = 'pointer'
     animation.interactive = true
@@ -189,7 +207,7 @@ async function loadSpineFiles(files: FileNamesAndUrls, app: Testbench) {
         toggleAnimation()
     })
 
-    app.addImportControls({
+    app.addNewImportControls({
         name: jsonFile.name,
         get(): DisplayMeta {
             return {
@@ -204,6 +222,9 @@ async function loadSpineFiles(files: FileNamesAndUrls, app: Testbench) {
 
             animation.scale.set(d.scale, Math.abs(d.scale))
         },
+        applyFilters(filters: Filter[]) {
+            animation.filters = filters
+        }
     })
 
     // app.start()

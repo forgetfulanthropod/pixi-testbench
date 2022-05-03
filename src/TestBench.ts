@@ -10,7 +10,8 @@ import {
     Sprite,
     // TilingSprite,
     utils,
-    filters as externalFilters
+    filters as externalFilters,
+    Filter
 } from 'pixi.js'
 import { screenWidth, screenHeight } from './bindFileDragging'
 import { Manifest } from './main'
@@ -26,22 +27,21 @@ type DisplayItem = {
     name: string
     get: () => DisplayMeta
     set: (meta: DisplayMeta) => void
+    applyFilters: (filters: Filter[]) => void
 }
 
 export default class Testbench extends Application {
-    domElement: any
-    initWidth: any
-    initHeight: any
-    animating: any
-    rendering: any
+    domElement: HTMLDivElement
+    initWidth: number
+    initHeight: number
+    animating: boolean
+    rendering: boolean
     events: any
     animateTimer: any
     bg: any
-    pond: any
-    fishCount: any
-    fishes: any
-    fishFilters: any
-    pondFilters: any
+    // unfilteredContainer = new Container()
+    filteredContainer = new Container()
+    sceneFilters: any
     filterArea: any
     padding: any
     bounds: any
@@ -51,9 +51,6 @@ export default class Testbench extends Application {
     constructor() {
         const gui = new GUI()
 
-        // if (localStorage.getItem('save')) gui.load(JSON.parse(localStorage.getItem('save')))
-
-        // Get the initial dementions for the application
         const domElement = document.querySelector('#container') as HTMLDivElement
         const initWidth = domElement.offsetWidth
         const initHeight = domElement.offsetHeight
@@ -67,8 +64,6 @@ export default class Testbench extends Application {
 
         })
 
-        // settings.PRECISION_FRAGMENT = 'highp'
-
         this.domElement = domElement
 
         this.initWidth = initWidth
@@ -78,11 +73,7 @@ export default class Testbench extends Application {
         this.events = new EventEmitter()
         this.animateTimer = 0
         this.bg = null
-        this.pond = null
-        this.fishCount = 20
-        this.fishes = []
-        this.fishFilters = []
-        this.pondFilters = []
+        this.sceneFilters = []
         this.filterArea = new Rectangle()
         this.padding = 100
         this.bounds = new Rectangle(-this.padding, -this.padding,
@@ -117,9 +108,6 @@ export default class Testbench extends Application {
 
         this.ticker.add(closuredAnimate)
 
-        // this.ticker.add(this.animate, this);
-
-        // this.gui.add({}, 'myFunction'); // Button
         this.gui
             .add({
                 saveJson() {
@@ -145,18 +133,9 @@ export default class Testbench extends Application {
             .name('Save as JSON')
 
         this.importsFolder = this.gui.addFolder('YOUR IMPORTS')
-
-
-        // this.gui
-        //     .add({
-        //         clear() {
-        //             if (confirm('clear saved filters?')) localStorage.clear()
-        //         }
-        //     }, 'clear')
-        //     .name('Clear Saved')
     }
 
-    addImportControls(item: DisplayItem) {
+    addNewImportControls(item: DisplayItem) {
         const folder = this.importsFolder.addFolder(item.name.slice(0, 24)).close()
 
         this.gui.folders.splice(this.gui.folders.length - 1, 1)
@@ -177,10 +156,16 @@ export default class Testbench extends Application {
         folder.add(xyScale, 'scale', -1.2, 1.2).onChange((scale: number) => {
             item.set({ ...xyScale, scale })
         })
-        //scale .05 -> 10
-        //x -SCREEN_WIDTH, SCREEN_WIDTH
-        //y -SCREEN_HEIGHT, SCREEN_HEIGHT
-        // folder.add({a: })
+
+        folder.add({ filtersOnlyHere: false }, 'filtersOnlyHere').onChange((only: boolean) => {
+            if (only) {
+                item.applyFilters(this.sceneFilters)
+                this.filteredContainer.filters = []
+            } else {
+                item.applyFilters([])
+                this.filteredContainer.filters = this.sceneFilters
+            }
+        })
     }
 
     /**
@@ -211,51 +196,19 @@ export default class Testbench extends Application {
         // const { bounds, initWidth, initHeight } = this;
 
         // Setup the container
-        this.pond = new Container()
-        this.pond.filterArea = this.filterArea
-        this.pond.filters = this.pondFilters
-        this.stage.addChild(this.pond)
+        this.filteredContainer = new Container()
+        this.filteredContainer.filterArea = this.filterArea
+        this.filteredContainer.filters = this.sceneFilters
+        // this.unfilteredContainer = new Container()
+        // this.stage.addChild(this.unfilteredContainer)
+        this.stage.addChild(this.filteredContainer)
 
         // Setup the background image
         this.bg = new Sprite(resources.background.texture)
-        this.pond.addChild(this.bg)
+        this.filteredContainer.addChild(this.bg)
 
-        // Create and add the fish
-        // for (let i = 0; i < this.fishCount; i++) {
-        //     const id = `fish${(i % 4) + 1}`;
-        //     const fish = new Sprite(resources[id].texture);
-
-        //     fish.anchor.set(0.5);
-        //     fish.filters = this.fishFilters;
-
-        //     fish.direction = Math.random() * Math.PI * 2;
-        //     fish.speed = 2 + (Math.random() * 2);
-        //     fish.turnSpeed = Math.random() - 0.8;
-
-        //     fish.x = Math.random() * bounds.width;
-        //     fish.y = Math.random() * bounds.height;
-
-        //     fish.scale.set(0.8 + (Math.random() * 0.3));
-        //     this.pond.addChild(fish);
-        //     this.fishes.push(fish);
-        // }
-
-        // Setup the tiling sprite
-        // this.overlay = new TilingSprite(
-        //     resources.overlay.texture,
-        //     initWidth,
-        //     initHeight,
-        // );
-
-        // Add the overlay
-        // this.pond.addChild(this.overlay);
-
-        // Handle window resize event
         window.addEventListener('resize', this.handleResize.bind(this))
         this.handleResize()
-
-        // Handle fish animation
-        // this.ticker.add(this.animate, this);
     }
 
     /**
@@ -305,46 +258,18 @@ export default class Testbench extends Application {
     }
 
     /**
-     * Animate the fish, overlay and filters (if applicable)
+     * Animate
      * @param {number} delta - % difference in time from last frame render
      */
     animate(delta?: number) {
         this.animateTimer += delta
 
-        const { bounds, animateTimer } = this
+        const { animateTimer } = this
 
         this.events.emit('animate', delta, animateTimer)
 
         if (!this.animating) {
             return
-        }
-
-        // Animate the overlay
-        // overlay.tilePosition.x = animateTimer * -1;
-        // overlay.tilePosition.y = animateTimer * -1;
-
-        for (let i = 0; i < this.fishes.length; i++) {
-            const fish = this.fishes[i]
-
-            fish.direction += fish.turnSpeed * 0.01
-
-            fish.x += Math.sin(fish.direction) * fish.speed
-            fish.y += Math.cos(fish.direction) * fish.speed
-
-            fish.rotation = -fish.direction - (Math.PI / 2)
-
-            if (fish.x < bounds.x) {
-                fish.x += bounds.width
-            }
-            if (fish.x > bounds.x + bounds.width) {
-                fish.x -= bounds.width
-            }
-            if (fish.y < bounds.y) {
-                fish.y += bounds.height
-            }
-            if (fish.y > bounds.y + bounds.height) {
-                fish.y -= bounds.height
-            }
         }
     }
 
@@ -355,7 +280,6 @@ export default class Testbench extends Application {
      * @param {string} [options.id] The name of the PIXI.filters class
      * @param {boolean} [options.global] Filter is in pixi.js
      * @param {array} [options.args] Constructor arguments
-     * @param {boolean} [options.fishOnly=false] Apply to fish only, not whole scene
      * @param {boolean} [options.enabled=false] Filter is enabled by default
      * @param {boolean} [options.opened=false] Filter Folder is opened by default
      * @param {function} [oncreate] Function takes filter and gui folder as
@@ -372,7 +296,6 @@ export default class Testbench extends Application {
             enabled: false,
             opened: false,
             args: null,
-            fishOnly: false,
             global: false,
             oncreate: null,
         }, options)
@@ -435,12 +358,7 @@ export default class Testbench extends Application {
             options.oncreate.call(filter, folder)
         }
 
-        if (options.fishOnly) {
-            this.fishFilters.push(filter)
-        } else {
-            this.pondFilters.push(filter)
-        }
-
+        this.sceneFilters.push(filter)
         return filter
     }
 }

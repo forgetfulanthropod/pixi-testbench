@@ -1,31 +1,63 @@
 import GUI from 'lil-gui';
+
+
 import * as filters from 'pixi-filters';
 import {
     Application,
-    settings,
+    // settings,
     Container,
     Rectangle,
     Sprite,
-    TilingSprite,
+    // TilingSprite,
     utils,
     filters as externalFilters
 } from 'pixi.js';
+import { Manifest } from './main'
 
 const { EventEmitter } = utils;
 
-export default class DemoApplication extends Application {
-    constructor() {
-        const gui = new GUI();
+type DisplayMeta = {
+    x: number
+    y: number
+    scale: number
+}
+type DisplayItem = {
+    name: string
+    get: () => DisplayMeta
+    set: (meta: DisplayMeta) => void
+}
 
-        if (localStorage.getItem('save')) gui.load(JSON.parse(localStorage.getItem('save')))
+export default class Testbench extends Application {
+    domElement: any
+    initWidth: any
+    initHeight: any
+    animating: any
+    rendering: any
+    events: any
+    animateTimer: any
+    bg: any
+    pond: any
+    fishCount: any
+    fishes: any
+    fishFilters: any
+    pondFilters: any
+    filterArea: any
+    padding: any
+    bounds: any
+    gui: any
+    
+    constructor() {
+        const gui = new GUI()
+
+        // if (localStorage.getItem('save')) gui.load(JSON.parse(localStorage.getItem('save')))
 
         // Get the initial dementions for the application
-        const domElement = document.querySelector('#container');
-        const initWidth = domElement.offsetWidth;
-        const initHeight = domElement.offsetHeight;
+        const domElement = document.querySelector('#container') as HTMLDivElement
+        const initWidth = domElement.offsetWidth
+        const initHeight = domElement.offsetHeight
 
         super({
-            view: document.querySelector('#stage'),
+            view: document.querySelector('#stage') as HTMLCanvasElement,
             width: initWidth,
             height: initHeight,
             autoStart: false,
@@ -33,7 +65,7 @@ export default class DemoApplication extends Application {
 
         });
 
-        settings.PRECISION_FRAGMENT = 'highp';
+        // settings.PRECISION_FRAGMENT = 'highp'
 
         this.domElement = domElement;
 
@@ -61,7 +93,7 @@ export default class DemoApplication extends Application {
         this.gui = gui;
         this.gui.add(this, 'rendering')
             .name('&bull; Rendering')
-            .onChange((value) => {
+            .onChange((value: boolean) => {
                 if (!value) {
                     app.stop();
                 } else {
@@ -73,7 +105,7 @@ export default class DemoApplication extends Application {
 
         this.gui.add(this, 'animating')
             .name('&bull; Animating')
-            .onChange((value) => {
+            .onChange((value: boolean) => {
                 if (!value) {
                     this.ticker.remove(closuredAnimate)
                 } else {
@@ -89,9 +121,9 @@ export default class DemoApplication extends Application {
         this.gui
             .add({
                 saveJson() {
-                    const guiSave = gui.save()
+                    const guiSave = gui.save() as {folders: Record<string,any>}
 
-                    const enabledFolders = {}
+                    const enabledFolders:Record<string,any> = {}
                     Object.keys(guiSave.folders).filter(fKey => {
                         return guiSave.folders[fKey].controllers.enabled
                     }).forEach(fKey => {
@@ -103,7 +135,8 @@ export default class DemoApplication extends Application {
                         folders: enabledFolders
                     }
                     console.log('saving', { enabledFilters })
-                    saveFile(JSON.stringify(enabledFilters), 'pixi-filters.json')
+
+                    saveFile(enabledFilters, 'pixi-filters.json')
                         // localStorage.setItem('save', JSON.stringify(gui.save()))
                 }
             }, 'saveJson')
@@ -119,6 +152,17 @@ export default class DemoApplication extends Application {
         //     .name('Clear Saved')
     }
 
+    addItemControls(item: DisplayItem) {
+        const folder = this.gui.addFolder(item.name).close();
+
+        void folder
+        //TODO 
+        //scale .05 -> 10
+        //x -SCREEN_WIDTH, SCREEN_WIDTH
+        //y -SCREEN_HEIGHT, SCREEN_HEIGHT
+        // folder.add({a: })
+    }
+
     /**
      * Convenience for getting resources
      * @member {object}
@@ -131,7 +175,7 @@ export default class DemoApplication extends Application {
      * Load resources
      * @param {object} manifest Collection of resources to load
      */
-    load(manifest, callback) {
+    load(manifest: Manifest, callback: () => void) {
         this.loader.add(manifest).load(() => {
             callback();
             this.init();
@@ -144,7 +188,7 @@ export default class DemoApplication extends Application {
      */
     init() {
         const { resources } = this.loader;
-        const { bounds, initWidth, initHeight } = this;
+        // const { bounds, initWidth, initHeight } = this;
 
         // Setup the container
         this.pond = new Container();
@@ -244,7 +288,7 @@ export default class DemoApplication extends Application {
      * Animate the fish, overlay and filters (if applicable)
      * @param {number} delta - % difference in time from last frame render
      */
-    animate(delta) {
+    animate(delta?: number) {
         this.animateTimer += delta;
 
         const { bounds, animateTimer } = this;
@@ -298,7 +342,7 @@ export default class DemoApplication extends Application {
      *        arguments and is scoped to the Demo application.
      * @return {PIXI.Filter} Instance of new filter
      */
-    addFilter(id, options) {
+    addFilter(id: string, options: any) {
         if (typeof options === 'function') {
             options = { oncreate: options };
         }
@@ -319,6 +363,7 @@ export default class DemoApplication extends Application {
 
         const app = this;
         const folder = this.gui.addFolder(options.name).close();
+        //@ts-expect-error
         const ClassRef = filters[id] || externalFilters[id];
 
         if (!ClassRef) {
@@ -329,11 +374,13 @@ export default class DemoApplication extends Application {
 
         if (options.args) {
             // eslint-disable-next-line func-style
-            const ClassRefArgs = function(a) {
+            const ClassRefArgs = function(a: object) {
+                //@ts-expect-error
                 ClassRef.apply(this, a);
             };
 
             ClassRefArgs.prototype = ClassRef.prototype;
+            //@ts-expect-error
             filter = new ClassRefArgs(options.args);
         } else {
             filter = new ClassRef();
@@ -343,7 +390,7 @@ export default class DemoApplication extends Application {
         filter.enabled = options.enabled;
 
         // Track enabled change with analytics
-        folder.add(filter, 'enabled').onChange((enabled) => {
+        folder.add(filter, 'enabled').onChange((enabled: boolean) => {
             // ga('send', 'event', id, enabled ? 'enabled' : 'disabled');
 
             app.events.emit('enable', enabled);
@@ -378,17 +425,13 @@ export default class DemoApplication extends Application {
     }
 }
 
-async function saveFile(blob, name = null) {
+async function saveFile(obj: object, fileName: string) {
 
-    // create a new handle
-    const newHandle = await window.showSaveFilePicker({ suggestedName: name });
-
-    // create a FileSystemWritableFileStream to write to
-    const writableStream = await newHandle.createWritable()
-
-    // write our file
-    await writableStream.write(blob);
-
-    // close the file and write the contents to disk.
-    await writableStream.close();
+    const content = JSON.stringify(obj, null, 2)
+    var a = document.createElement('a')
+    var file = new Blob([content], { type: 'application/json' })
+    a.href = URL.createObjectURL(file)
+    a.download = fileName
+    a.click()
+    a.remove()
 }

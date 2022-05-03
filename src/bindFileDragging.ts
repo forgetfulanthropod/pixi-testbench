@@ -1,4 +1,4 @@
-import type DemoApplication from "./DemoApplication"
+import type Testbench from "./TestBench"
 import * as filters from "./filters"
 import * as zip from "@zip.js/zip.js"
 // import { LoaderResource, Sprite } from "pixi.js"
@@ -15,7 +15,7 @@ let screenHeight = 0 //document.getElementById('container').getBoundingClientRec
 let screenWidth = 0 //document.getElementById('container').getBoundingClientRect().width
 
 export function bindFileDragNDrop(
-    app: DemoApplication, 
+    app: Testbench, 
     container: HTMLElement, 
     dragHover: HTMLDivElement
 ) : () => void {

@@ -1,5 +1,5 @@
 import "./style.css"
-import DemoApplication from "./DemoApplication"
+import Testbench from "./TestBench"
 import * as PIXI from "pixi.js"
 // import { LoaderResource } from "pixi.js"
 
@@ -12,18 +12,13 @@ import { bindFileDragNDrop } from "./bindFileDragging"
 
 //@ts-expect-error
 window.PIXI = PIXI
-// const app = document.querySelector<HTMLDivElement>('#app')!
 
-// app.innerHTML = `
-//   <h1>Hello Vite!</h1>
-//   <a href="https://vitejs.dev/guide/features.html" target="_blank">Documentation</a>
-// `
-// import './ga';
+const app = new Testbench()
 
-const app = new DemoApplication()
+export type Manifest = {name: string, url: string}[]
 
-export const manifest = [
-
+export const manifest: Manifest = [
+    
     { name: "background", url: backgroundUrl },
     { name: "map", url: displacementMapUrl },
     { name: "lightmap", url: lightMapUrl },

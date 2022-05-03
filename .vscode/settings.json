@@ -4,5 +4,6 @@
         "titleBar.activeBackground": "#1A4922",
         "titleBar.activeForeground": "#F7FCF8"
     },
-    "typescript.format.semicolons": "remove"
+    "typescript.format.semicolons": "remove",
+    "editor.formatOnSave": true
 }

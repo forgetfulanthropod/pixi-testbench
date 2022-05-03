@@ -1,7 +1,7 @@
-import GUI from 'lil-gui';
+import GUI from 'lil-gui'
 
 
-import * as filters from 'pixi-filters';
+import * as filters from 'pixi-filters'
 import {
     Application,
     // settings,
@@ -11,12 +11,13 @@ import {
     // TilingSprite,
     utils,
     filters as externalFilters
-} from 'pixi.js';
+} from 'pixi.js'
+import { screenWidth, screenHeight } from './bindFileDragging'
 import { Manifest } from './main'
 
-const { EventEmitter } = utils;
+const { EventEmitter } = utils
 
-type DisplayMeta = {
+export type DisplayMeta = {
     x: number
     y: number
     scale: number
@@ -44,8 +45,9 @@ export default class Testbench extends Application {
     filterArea: any
     padding: any
     bounds: any
+    importsFolder: any
     gui: any
-    
+
     constructor() {
         const gui = new GUI()
 
@@ -63,43 +65,43 @@ export default class Testbench extends Application {
             autoStart: false,
             backgroundColor: 0x000000,
 
-        });
+        })
 
         // settings.PRECISION_FRAGMENT = 'highp'
 
-        this.domElement = domElement;
+        this.domElement = domElement
 
-        this.initWidth = initWidth;
-        this.initHeight = initHeight;
-        this.animating = true;
-        this.rendering = true;
-        this.events = new EventEmitter();
-        this.animateTimer = 0;
-        this.bg = null;
-        this.pond = null;
-        this.fishCount = 20;
-        this.fishes = [];
-        this.fishFilters = [];
-        this.pondFilters = [];
-        this.filterArea = new Rectangle();
-        this.padding = 100;
+        this.initWidth = initWidth
+        this.initHeight = initHeight
+        this.animating = true
+        this.rendering = true
+        this.events = new EventEmitter()
+        this.animateTimer = 0
+        this.bg = null
+        this.pond = null
+        this.fishCount = 20
+        this.fishes = []
+        this.fishFilters = []
+        this.pondFilters = []
+        this.filterArea = new Rectangle()
+        this.padding = 100
         this.bounds = new Rectangle(-this.padding, -this.padding,
             initWidth + (this.padding * 2),
             initHeight + (this.padding * 2),
-        );
+        )
 
-        const app = this;
+        const app = this
 
-        this.gui = gui;
+        this.gui = gui
         this.gui.add(this, 'rendering')
             .name('&bull; Rendering')
             .onChange((value: boolean) => {
                 if (!value) {
-                    app.stop();
+                    app.stop()
                 } else {
-                    app.start();
+                    app.start()
                 }
-            });
+            })
 
         const closuredAnimate = () => this.animate()
 
@@ -121,9 +123,9 @@ export default class Testbench extends Application {
         this.gui
             .add({
                 saveJson() {
-                    const guiSave = gui.save() as {folders: Record<string,any>}
+                    const guiSave = gui.save() as { folders: Record<string, any> }
 
-                    const enabledFolders:Record<string,any> = {}
+                    const enabledFolders: Record<string, any> = {}
                     Object.keys(guiSave.folders).filter(fKey => {
                         return guiSave.folders[fKey].controllers.enabled
                     }).forEach(fKey => {
@@ -137,10 +139,12 @@ export default class Testbench extends Application {
                     console.log('saving', { enabledFilters })
 
                     saveFile(enabledFilters, 'pixi-filters.json')
-                        // localStorage.setItem('save', JSON.stringify(gui.save()))
+                    // localStorage.setItem('save', JSON.stringify(gui.save()))
                 }
             }, 'saveJson')
             .name('Save as JSON')
+
+        this.importsFolder = this.gui.addFolder('YOUR IMPORTS')
 
 
         // this.gui
@@ -152,11 +156,27 @@ export default class Testbench extends Application {
         //     .name('Clear Saved')
     }
 
-    addItemControls(item: DisplayItem) {
-        const folder = this.gui.addFolder(item.name).close();
+    addImportControls(item: DisplayItem) {
+        const folder = this.importsFolder.addFolder(item.name.slice(0, 24)).close()
 
-        void folder
-        //TODO 
+        this.gui.folders.splice(this.gui.folders.length - 1, 1)
+        this.gui.folders.splice(0, 0, folder)
+
+        // this.gui.folders = [...]
+
+        const xyScale = item.get()
+
+        folder.add(xyScale, 'x', -screenWidth, screenWidth).onChange((x: number) => {
+            item.set({ ...xyScale, x })
+        })
+
+        folder.add(xyScale, 'y', -screenHeight, screenHeight).onChange((y: number) => {
+            item.set({ ...xyScale, y })
+        })
+
+        folder.add(xyScale, 'scale', .05, 1.2).onChange((scale: number) => {
+            item.set({ ...xyScale, scale })
+        })
         //scale .05 -> 10
         //x -SCREEN_WIDTH, SCREEN_WIDTH
         //y -SCREEN_HEIGHT, SCREEN_HEIGHT
@@ -168,7 +188,7 @@ export default class Testbench extends Application {
      * @member {object}
      */
     get resources() {
-        return this.loader.resources;
+        return this.loader.resources
     }
 
     /**
@@ -177,28 +197,28 @@ export default class Testbench extends Application {
      */
     load(manifest: Manifest, callback: () => void) {
         this.loader.add(manifest).load(() => {
-            callback();
-            this.init();
-            this.start();
-        });
+            callback()
+            this.init()
+            this.start()
+        })
     }
 
     /**
      * Called when the load is completed
      */
     init() {
-        const { resources } = this.loader;
+        const { resources } = this.loader
         // const { bounds, initWidth, initHeight } = this;
 
         // Setup the container
-        this.pond = new Container();
-        this.pond.filterArea = this.filterArea;
-        this.pond.filters = this.pondFilters;
-        this.stage.addChild(this.pond);
+        this.pond = new Container()
+        this.pond.filterArea = this.filterArea
+        this.pond.filters = this.pondFilters
+        this.stage.addChild(this.pond)
 
         // Setup the background image
-        this.bg = new Sprite(resources.background.texture);
-        this.pond.addChild(this.bg);
+        this.bg = new Sprite(resources.background.texture)
+        this.pond.addChild(this.bg)
 
         // Create and add the fish
         // for (let i = 0; i < this.fishCount; i++) {
@@ -231,8 +251,8 @@ export default class Testbench extends Application {
         // this.pond.addChild(this.overlay);
 
         // Handle window resize event
-        window.addEventListener('resize', this.handleResize.bind(this));
-        this.handleResize();
+        window.addEventListener('resize', this.handleResize.bind(this))
+        this.handleResize()
 
         // Handle fish animation
         // this.ticker.add(this.animate, this);
@@ -242,46 +262,46 @@ export default class Testbench extends Application {
      * Resize the demo when the window resizes
      */
     handleResize() {
-        const { padding, bg, filterArea, bounds } = this;
+        const { padding, bg, filterArea, bounds } = this
 
-        const width = this.domElement.offsetWidth;
-        const height = this.domElement.offsetHeight;
-        const filterAreaPadding = 0;
+        const width = this.domElement.offsetWidth
+        const height = this.domElement.offsetHeight
+        const filterAreaPadding = 0
 
         // Use equivalent of CSS's contain for the background
         // so that it scales proportionally
-        const bgAspect = bg.texture.width / bg.texture.height;
-        const winAspect = width / height;
+        const bgAspect = bg.texture.width / bg.texture.height
+        const winAspect = width / height
 
         if (winAspect > bgAspect) {
-            bg.width = width;
-            bg.height = width / bgAspect;
+            bg.width = width
+            bg.height = width / bgAspect
         } else {
-            bg.height = height;
-            bg.width = height * bgAspect;
+            bg.height = height
+            bg.width = height * bgAspect
         }
 
-        bg.x = (width - bg.width) / 2;
-        bg.y = (height - bg.height) / 2;
+        bg.x = (width - bg.width) / 2
+        bg.y = (height - bg.height) / 2
 
         // overlay.width = width;
         // overlay.height = height;
 
-        bounds.x = -padding;
-        bounds.y = -padding;
-        bounds.width = width + (padding * 2);
-        bounds.height = height + (padding * 2);
+        bounds.x = -padding
+        bounds.y = -padding
+        bounds.width = width + (padding * 2)
+        bounds.height = height + (padding * 2)
 
-        filterArea.x = filterAreaPadding;
-        filterArea.y = filterAreaPadding;
-        filterArea.width = width - (filterAreaPadding * 2);
-        filterArea.height = height - (filterAreaPadding * 2);
+        filterArea.x = filterAreaPadding
+        filterArea.y = filterAreaPadding
+        filterArea.width = width - (filterAreaPadding * 2)
+        filterArea.height = height - (filterAreaPadding * 2)
 
-        this.events.emit('resize', width, height);
+        this.events.emit('resize', width, height)
 
-        this.renderer.resize(width, height);
+        this.renderer.resize(width, height)
 
-        this.render();
+        this.render()
     }
 
     /**
@@ -289,14 +309,14 @@ export default class Testbench extends Application {
      * @param {number} delta - % difference in time from last frame render
      */
     animate(delta?: number) {
-        this.animateTimer += delta;
+        this.animateTimer += delta
 
-        const { bounds, animateTimer } = this;
+        const { bounds, animateTimer } = this
 
-        this.events.emit('animate', delta, animateTimer);
+        this.events.emit('animate', delta, animateTimer)
 
         if (!this.animating) {
-            return;
+            return
         }
 
         // Animate the overlay
@@ -304,26 +324,26 @@ export default class Testbench extends Application {
         // overlay.tilePosition.y = animateTimer * -1;
 
         for (let i = 0; i < this.fishes.length; i++) {
-            const fish = this.fishes[i];
+            const fish = this.fishes[i]
 
-            fish.direction += fish.turnSpeed * 0.01;
+            fish.direction += fish.turnSpeed * 0.01
 
-            fish.x += Math.sin(fish.direction) * fish.speed;
-            fish.y += Math.cos(fish.direction) * fish.speed;
+            fish.x += Math.sin(fish.direction) * fish.speed
+            fish.y += Math.cos(fish.direction) * fish.speed
 
-            fish.rotation = -fish.direction - (Math.PI / 2);
+            fish.rotation = -fish.direction - (Math.PI / 2)
 
             if (fish.x < bounds.x) {
-                fish.x += bounds.width;
+                fish.x += bounds.width
             }
             if (fish.x > bounds.x + bounds.width) {
-                fish.x -= bounds.width;
+                fish.x -= bounds.width
             }
             if (fish.y < bounds.y) {
-                fish.y += bounds.height;
+                fish.y += bounds.height
             }
             if (fish.y > bounds.y + bounds.height) {
-                fish.y -= bounds.height;
+                fish.y -= bounds.height
             }
         }
     }
@@ -344,7 +364,7 @@ export default class Testbench extends Application {
      */
     addFilter(id: string, options: any) {
         if (typeof options === 'function') {
-            options = { oncreate: options };
+            options = { oncreate: options }
         }
 
         options = Object.assign({
@@ -355,73 +375,73 @@ export default class Testbench extends Application {
             fishOnly: false,
             global: false,
             oncreate: null,
-        }, options);
+        }, options)
 
         if (options.global) {
-            options.name += ' (pixi.js)';
+            options.name += ' (pixi.js)'
         }
 
-        const app = this;
-        const folder = this.gui.addFolder(options.name).close();
+        const app = this
+        const folder = this.gui.addFolder(options.name).close()
         //@ts-expect-error
-        const ClassRef = filters[id] || externalFilters[id];
+        const ClassRef = filters[id] || externalFilters[id]
 
         if (!ClassRef) {
-            throw new Error(`Unable to find class name with "${id}"`);
+            throw new Error(`Unable to find class name with "${id}"`)
         }
 
-        let filter;
+        let filter
 
         if (options.args) {
             // eslint-disable-next-line func-style
-            const ClassRefArgs = function(a: object) {
+            const ClassRefArgs = function (a: object) {
                 //@ts-expect-error
-                ClassRef.apply(this, a);
-            };
+                ClassRef.apply(this, a)
+            }
 
-            ClassRefArgs.prototype = ClassRef.prototype;
+            ClassRefArgs.prototype = ClassRef.prototype
             //@ts-expect-error
-            filter = new ClassRefArgs(options.args);
+            filter = new ClassRefArgs(options.args)
         } else {
-            filter = new ClassRef();
+            filter = new ClassRef()
         }
 
         // Set enabled status
-        filter.enabled = options.enabled;
+        filter.enabled = options.enabled
 
         // Track enabled change with analytics
         folder.add(filter, 'enabled').onChange((enabled: boolean) => {
             // ga('send', 'event', id, enabled ? 'enabled' : 'disabled');
 
-            app.events.emit('enable', enabled);
+            app.events.emit('enable', enabled)
 
-            this.render();
+            this.render()
             if (enabled) {
-                folder.domElement.className += ' enabled';
+                folder.domElement.className += ' enabled'
             } else {
-                folder.domElement.className = folder.domElement.className.replace(' enabled', '');
+                folder.domElement.className = folder.domElement.className.replace(' enabled', '')
             }
-        });
+        })
 
         if (options.opened) {
-            folder.open();
+            folder.open()
         }
 
         if (options.enabled) {
-            folder.domElement.className += ' enabled';
+            folder.domElement.className += ' enabled'
         }
 
         if (options.oncreate) {
-            options.oncreate.call(filter, folder);
+            options.oncreate.call(filter, folder)
         }
 
         if (options.fishOnly) {
-            this.fishFilters.push(filter);
+            this.fishFilters.push(filter)
         } else {
-            this.pondFilters.push(filter);
+            this.pondFilters.push(filter)
         }
 
-        return filter;
+        return filter
     }
 }
 

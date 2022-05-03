@@ -4,21 +4,22 @@ import * as zip from "@zip.js/zip.js"
 // import { LoaderResource, Sprite } from "pixi.js"
 import * as PIXI from "pixi.js"
 import { manifest } from "./main"
-import { Application, Container, Sprite } from "pixi.js"
+import { Container, Sprite } from "pixi.js"
 import { Spine, TextureAtlas } from "pixi-spine"
 import { AtlasAttachmentLoader, Skeleton, SkeletonData, SkeletonJson } from "@pixi-spine/runtime-4.0"
+import { DisplayMeta } from "./TestBench"
 
 
 
-let screenHeight = 0 //document.getElementById('container').getBoundingClientRect().height
+export let screenHeight = 0 //document.getElementById('container').getBoundingClientRect().height
 
-let screenWidth = 0 //document.getElementById('container').getBoundingClientRect().width
+export let screenWidth = 0 //document.getElementById('container').getBoundingClientRect().width
 
 export function bindFileDragNDrop(
-    app: Testbench, 
-    container: HTMLElement, 
+    app: Testbench,
+    container: HTMLElement,
     dragHover: HTMLDivElement
-) : () => void {
+): () => void {
 
     screenHeight = container.getBoundingClientRect().height
     screenWidth = container.getBoundingClientRect().width
@@ -38,7 +39,7 @@ export function bindFileDragNDrop(
     dragHover.style.opacity = "1"
 
     dragHover.querySelector('input')!.oninput = async (e) => {
-        console.log('input here, ', {e})
+        console.log('input here, ', { e })
         e.preventDefault()
 
         dragHover.style.opacity = "0"
@@ -79,69 +80,71 @@ function getFile(e: Event): File {
 
     if (files == null || files.length !== 1) {
         alert("sorry, must drop one \n.png \nor \n.zip (from spine or aftereffects)")
-        
+
         throw new Error("bad file drop?")
     }
 
     return files[0]
 }
 
-async function loadPng(file: File, app: Application) {
+async function loadPng(file: File, app: Testbench) {
     const url = URL.createObjectURL(file)
-    
+
     const loadSprite = PIXI.Sprite.from(url)
 
-    ;(app.stage.children[0] as Container).addChild(loadSprite)
+        ; (app.stage.children[0] as Container).addChild(loadSprite)
 }
 
-type FileNamesAndUrls = {name: string, url: string}[]
+type FileNamesAndUrls = { name: string, url: string }[]
 
-async function loadZip(file: File, app: Application) {
+async function loadZip(file: File, app: Testbench) {
     const entries = await getEntries(file as Blob, {})
     console.log({ entries })
 
     const files: FileNamesAndUrls = []
-    
+
     await Promise.all(
-        entries.filter(entry => 
+        entries.filter(entry =>
             !entry.filename.includes('__MACOSX')
         )
-        .map(async entry => {
-            if (entry == null) return
+            .map(async entry => {
+                if (entry == null) return
 
-            const blobURL = await getURL(entry, 
-                // {
-                //     password: passwordInput.value,
-                //     onprogress: (index, max) => {
-                //         unzipProgress.value = index;
-                //         unzipProgress.max = max;
-                //     },
-                //     signal
-                // }
-            );
+                const blobURL = await getURL(entry,
+                    // {
+                    //     password: passwordInput.value,
+                    //     onprogress: (index, max) => {
+                    //         unzipProgress.value = index;
+                    //         unzipProgress.max = max;
+                    //     },
+                    //     signal
+                    // }
+                )
 
-            const nameParts = entry.filename.split('/')
-            const filename = nameParts.length > 1 ? nameParts.slice(1).join('/') : entry.filename
-            console.log({filename})
-            files.push({name: filename, url: blobURL})
-        })
+                const nameParts = entry.filename.split('/')
+                const filename = nameParts.length > 1 ? nameParts.slice(1).join('/') : entry.filename
+                console.log({ filename })
+                files.push({ name: filename, url: blobURL })
+            })
     )
 
     const spineOnlyFile = files.find(file => file.name.includes('.atlas'))!
     if (spineOnlyFile != null)
         await loadSpineFiles(files, app)
+
+    // TODO: After Effects
 }
 
-async function loadSpineFiles(files: FileNamesAndUrls, app: Application) {
+async function loadSpineFiles(files: FileNamesAndUrls, app: Testbench) {
     const jsonFile = files.find(file => file.name.includes('.json'))!
     const atlasFile = files.find(file => file.name.includes('.atlas'))!
 
     console.log('about to parse data')
     console.log({
-        skeletonJson: await fetch(jsonFile.url).then(r => r.json()), 
-        atlasText: await fetch(atlasFile.url).then(r => r.text()), 
+        skeletonJson: await fetch(jsonFile.url).then(r => r.json()),
+        atlasText: await fetch(atlasFile.url).then(r => r.text()),
     })
-    
+
     new Skeleton(new SkeletonData())
     const skeleton = new SkeletonJson(
         new AtlasAttachmentLoader(
@@ -165,45 +168,61 @@ async function loadSpineFiles(files: FileNamesAndUrls, app: Application) {
 
     animation.scale.set(.5)
 
-    console.log({animationHeight: animation.height, screenHeight})
-    
-    if(animation.height > screenHeight * .9) animation.scale.set(screenHeight /  animation.height * .6 * .5)
+    console.log({ animationHeight: animation.height, screenHeight })
+
+    if (animation.height > screenHeight * .9) animation.scale.set(screenHeight / animation.height * .6 * .5)
     const bounds = animation.getBounds()
 
     if (bounds.left < -50) animation.x = -bounds.left + (screenWidth - animation.width) / 2
     if (bounds.top < -50) animation.y = -bounds.top + (screenHeight - animation.height) / 2
-    
+
     animation.state.setAnimation(0, skeleton.animations[0].name, true)
 
     let animationIndex = 0
     toggleAnimation()
 
-    ;(app.stage.children[0] as Container).addChild(animation)
-    
+        ; (app.stage.children[0] as Container).addChild(animation)
+
     animation.cursor = 'pointer'
     animation.interactive = true
     animation.on('pointerdown', () => {
         toggleAnimation()
     })
-    
+
+    app.addImportControls({
+        name: jsonFile.name,
+        get(): DisplayMeta {
+            return {
+                x: animation.x,
+                y: animation.y,
+                scale: animation.scale.x,
+            }
+        },
+        set(d: DisplayMeta) {
+            animation.x = d.x
+            animation.y = d.y
+            animation.scale.set(d.scale)
+        },
+    })
+
     // app.start()
 
     function toggleAnimation() {
-        console.log('toggling animation', {animationIndex})
+        console.log('toggling animation', { animationIndex })
         if (animationIndex >= skeleton.animations.length) animationIndex = 0
 
         animation.state.setAnimation(0, skeleton.animations[animationIndex].name, true)
-        
+
         animationIndex++
     }
-    
+
 }
 
 async function getURL(entry: zip.Entry, options = {}) {
     return URL.createObjectURL(
         //@ts-expect-error
         await entry.getData(
-            new zip.BlobWriter(), 
+            new zip.BlobWriter(),
             options
         )
     )

@@ -174,7 +174,7 @@ export default class Testbench extends Application {
             item.set({ ...xyScale, y })
         })
 
-        folder.add(xyScale, 'scale', .05, 1.2).onChange((scale: number) => {
+        folder.add(xyScale, 'scale', -1.2, 1.2).onChange((scale: number) => {
             item.set({ ...xyScale, scale })
         })
         //scale .05 -> 10

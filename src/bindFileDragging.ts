@@ -201,7 +201,8 @@ async function loadSpineFiles(files: FileNamesAndUrls, app: Testbench) {
         set(d: DisplayMeta) {
             animation.x = d.x
             animation.y = d.y
-            animation.scale.set(d.scale)
+
+            animation.scale.set(d.scale, Math.abs(d.scale))
         },
     })
 

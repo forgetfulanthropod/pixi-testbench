@@ -7,6 +7,7 @@ specifiers:
   pixi-filters: 4.1.6
   pixi-spine: ^3.0.13
   pixi.js: ^6.0.0-X
+  pixi6-after-effects: ^1.0.10
   typescript: ^4.5.4
   vite: ^2.9.5
 
@@ -16,6 +17,7 @@ dependencies:
   lil-gui: 0.16.1
   pixi-spine: 3.0.13
   pixi.js: 6.3.0
+  pixi6-after-effects: 1.0.10_pixi.js@6.3.0
 
 devDependencies:
   pixi-filters: 4.1.6
@@ -819,6 +821,10 @@ packages:
     resolution: {integrity: sha512-lhlDPfkG8iMsAE7CNTu6fqFZp/qySEUIGBLXQQA0RNfNtgCt7SlkaGAwX0nKaCwMMNqw+wDrTJIP8gOR7uxqEg==}
     dev: false
 
+  /bezier-easing/2.1.0:
+    resolution: {integrity: sha1-wE3+i5JtbsrKGBPWn/F5t8ICXYY=}
+    dev: false
+
   /earcut/2.2.3:
     resolution: {integrity: sha512-iRDI1QeCQIhMCZk48DRDMVgQSSBDmbzzNhnxIo+pwx3swkfjMh6vh0nWLq1NdvGHLKH6wIrAM3vQWeTj6qeoug==}
     dev: false
@@ -1194,6 +1200,15 @@ packages:
       '@pixi/text-bitmap': 6.3.0_e5b7c7296d8d0ea296850d503201ab8e
       '@pixi/ticker': 6.3.0_@pixi+settings@6.3.0
       '@pixi/utils': 6.3.0_144ef662441eafe6efbce13303d1e8b8
+    dev: false
+
+  /pixi6-after-effects/1.0.10_pixi.js@6.3.0:
+    resolution: {integrity: sha512-mvKHAO98EiZaqoHbR2bunO14zGWUgubFORg185Rb2Aqrqj0V5NKVSLXjX14d5hEwMMkmuTfffjxeJoTEEoK2ug==}
+    peerDependencies:
+      pixi.js: '6'
+    dependencies:
+      bezier-easing: 2.1.0
+      pixi.js: 6.3.0
     dev: false
 
   /postcss/8.4.12:

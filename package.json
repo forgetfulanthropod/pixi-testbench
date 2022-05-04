@@ -12,7 +12,8 @@
         "@zip.js/zip.js": "^2.4.10",
         "lil-gui": "^0.16.1",
         "pixi-spine": "^3.0.13",
-        "pixi.js": "^6.0.0-X"
+        "pixi.js": "^6.0.0-X",
+        "pixi6-after-effects": "^1.0.10"
     },
     "devDependencies": {
         "pixi-filters": "4.1.6",

@@ -10,6 +10,8 @@ import { AtlasAttachmentLoader, Skeleton, SkeletonData, SkeletonJson } from "@pi
 import { DisplayMeta } from "./TestBench"
 
 
+import { AEDataInterceptor, AEDataLoader, AfterEffects } from 'pixi6-after-effects/dist'
+
 
 export let screenHeight = 0 //document.getElementById('container').getBoundingClientRect().height
 
@@ -151,8 +153,9 @@ async function loadZip(file: File, app: Testbench) {
     const spineOnlyFile = files.find(file => file.name.includes('.atlas'))!
     if (spineOnlyFile != null)
         await loadSpineFiles(files, app)
-
-    // TODO: After Effects
+    else {
+        await loadAfterEffectsFiles(files, app)
+    }
 }
 
 async function loadSpineFiles(files: FileNamesAndUrls, app: Testbench) {
@@ -238,6 +241,70 @@ async function loadSpineFiles(files: FileNamesAndUrls, app: Testbench) {
         animationIndex++
     }
 
+}
+
+type AEClick = { target: AfterEffects }
+
+async function loadAfterEffectsFiles(files: FileNamesAndUrls, app: Testbench) {
+    const jsonFile = files.find(file => file.name.includes('.json'))!
+
+
+    const interceptor = new AEDataInterceptor({
+        '00': {
+            //B
+            outPoint: 103,
+            events: {
+                click: ({ target }: AEClick) => {
+                    target
+                    target.play(false)
+                }
+            }
+        },
+        '0': {
+            //O
+            outPoint: 103,
+            events: {
+                click: ({ target }: AEClick) => {
+                    target.play(true)
+                }
+            }
+        },
+        D: {
+            outPoint: 103,
+            events: {
+                click: ({ target }: AEClick) => {
+                    target.play(false)
+                },
+                completed: () => {
+                    console.log('completed D')
+                }
+            }
+        }
+    })
+
+    const loader = new AEDataLoader()
+
+    loader.loadJSONWithInterceptor(jsonFile.url, interceptor).then(
+        (data) => {
+            console.log({ data })
+
+            if (data == null) throw new Error('null data :/')
+
+            const ae = AfterEffects.fromData(data, {})
+            ae.scale.set(1)
+            ae.on('completed', (o) => {
+                console.log('completed!', o)
+            })
+            app.filteredContainer.addChild(ae)
+
+            PIXI.Ticker.shared.add((_dt) => {
+                ae.update(Date.now())
+            })
+        },
+        (err) => {
+            console.error('load error', err)
+        }
+    )
 }
 
 async function getURL(entry: zip.Entry, options = {}) {

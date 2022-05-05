@@ -2,8 +2,9 @@ import Testbench from "./TestBench"
 import * as PIXI from "pixi.js"
 import { Filter, Sprite } from "pixi.js"
 import { DisplayMeta } from "./TestBench"
-import { AEDataLoader, AfterEffects } from 'pixi6-after-effects/src'
-import { FileNamesAndUrls } from "./bindFileDragNDrop"
+import { AEDataLoader, AfterEffects } from 'pixi6-after-effects/dist'
+import { FileNamesAndUrls } from "./loadZip"
+// import { FileNamesAndUrls } from "./bindFileDragNDrop"
 
 // type AEClick = { target: AfterEffects }
 export async function loadAfterEffectsFiles(files: FileNamesAndUrls, app: Testbench) {

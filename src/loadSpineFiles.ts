@@ -3,7 +3,8 @@ import { BaseTexture, Filter } from "pixi.js"
 import { Spine, TextureAtlas } from "pixi-spine"
 import { AtlasAttachmentLoader, Skeleton, SkeletonData, SkeletonJson } from "@pixi-spine/runtime-4.0"
 import { DisplayMeta } from "./TestBench"
-import { FileNamesAndUrls, screenHeight, screenWidth } from "./bindFileDragNDrop"
+import { screenHeight, screenWidth } from "./bindFileDragNDrop"
+import { FileNamesAndUrls } from "./loadZip"
 
 export async function loadSpineFiles(files: FileNamesAndUrls, app: Testbench) {
     const jsonFile = files.find(file => file.name.includes('.json'))!

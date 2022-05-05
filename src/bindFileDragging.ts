@@ -4,13 +4,13 @@ import * as zip from "@zip.js/zip.js"
 // import { LoaderResource, Sprite } from "pixi.js"
 import * as PIXI from "pixi.js"
 import { manifest } from "./main"
-import { Filter, Sprite } from "pixi.js"
+import { BaseTexture, Filter, Sprite } from "pixi.js"
 import { Spine, TextureAtlas } from "pixi-spine"
 import { AtlasAttachmentLoader, Skeleton, SkeletonData, SkeletonJson } from "@pixi-spine/runtime-4.0"
 import { DisplayMeta } from "./TestBench"
 
 
-import { AEDataInterceptor, AEDataLoader, AfterEffects } from 'pixi6-after-effects/dist'
+import { AEDataInterceptor, AEDataLoader, AfterEffects } from 'pixi6-after-effects/src'
 
 
 export let screenHeight = 0 //document.getElementById('container').getBoundingClientRect().height
@@ -177,7 +177,7 @@ async function loadSpineFiles(files: FileNamesAndUrls, app: Testbench) {
 
                     const imageUrl = files.find(file => file.name === path)!.url
 
-                    loaderFunction(Sprite.from(imageUrl).texture.baseTexture)
+                    loaderFunction(BaseTexture.from(imageUrl))
                 }
             )
         )
@@ -249,42 +249,57 @@ async function loadAfterEffectsFiles(files: FileNamesAndUrls, app: Testbench) {
     const jsonFile = files.find(file => file.name.includes('.json'))!
 
 
-    const interceptor = new AEDataInterceptor({
-        '00': {
-            //B
-            outPoint: 103,
-            events: {
-                click: ({ target }: AEClick) => {
-                    target
-                    target.play(false)
-                }
-            }
-        },
-        '0': {
-            //O
-            outPoint: 103,
-            events: {
-                click: ({ target }: AEClick) => {
-                    target.play(true)
-                }
-            }
-        },
-        D: {
-            outPoint: 103,
-            events: {
-                click: ({ target }: AEClick) => {
-                    target.play(false)
-                },
-                completed: () => {
-                    console.log('completed D')
-                }
-            }
-        }
-    })
+    // const interceptor = new AEDataInterceptor({
+    //     '00': {
+    //         //B
+    //         outPoint: 103,
+    //         events: {
+    //             click: ({ target }: AEClick) => {
+    //                 target
+    //                 target.play(false)
+    //             }
+    //         }
+    //     },
+    //     '0': {
+    //         //O
+    //         outPoint: 103,
+    //         events: {
+    //             click: ({ target }: AEClick) => {
+    //                 target.play(true)
+    //             }
+    //         }
+    //     },
+    //     D: {
+    //         outPoint: 103,
+    //         events: {
+    //             click: ({ target }: AEClick) => {
+    //                 target.play(false)
+    //             },
+    //             completed: () => {
+    //                 console.log('completed D')
+    //             }
+    //         }
+    //     }
+    // })
 
     const loader = new AEDataLoader()
 
-    loader.loadJSONWithInterceptor(jsonFile.url, interceptor).then(
+    loader.imageTextureProxy = (path) => {
+        return Sprite.from(path).texture
+    }
+
+    loader.imagePathProxy = (path) => {
+        files.forEach(file => { console.log({ fileName: file.name, path }) })
+        const file = files.find(file => path.includes(file.name))
+
+        if (file == null) throw new Error(`"${path}" didn't seem to be in the zip...`)
+
+        return file.url
+        // return BaseTexture.from(file.url)
+    }
+    // loader.loadJSONWithInterceptor(jsonFile.url, interceptor).then(
+    debugger
+    loader.loadJSON(jsonFile.url).then(
         (data) => {
             console.log({ data })
 
@@ -296,9 +311,30 @@ async function loadAfterEffectsFiles(files: FileNamesAndUrls, app: Testbench) {
                 console.log('completed!', o)
             })
             app.filteredContainer.addChild(ae)
+            ae.play(true)
 
             PIXI.Ticker.shared.add((_dt) => {
                 ae.update(Date.now())
+            })
+
+            app.addNewImportControls({
+                name: jsonFile.name,
+                get(): DisplayMeta {
+                    return {
+                        x: ae.x,
+                        y: ae.y,
+                        scale: ae.scale.x,
+                    }
+                },
+                set(d: DisplayMeta) {
+                    ae.x = d.x
+                    ae.y = d.y
+
+                    ae.scale.set(d.scale, Math.abs(d.scale))
+                },
+                applyFilters(filters: Filter[]) {
+                    ae.filters = filters
+                }
             })
         },
         (err) => {

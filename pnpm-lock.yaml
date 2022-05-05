@@ -7,7 +7,7 @@ specifiers:
   pixi-filters: 4.1.6
   pixi-spine: ^3.0.13
   pixi.js: ^6.0.0-X
-  pixi6-after-effects: ^1.0.11
+  pixi6-after-effects: ^1.0.12
   typescript: ^4.5.4
   vite: ^2.9.5
 
@@ -17,7 +17,7 @@ dependencies:
   lil-gui: 0.16.1
   pixi-spine: 3.0.13
   pixi.js: 6.3.0
-  pixi6-after-effects: 1.0.11_pixi.js@6.3.0
+  pixi6-after-effects: 1.0.12_pixi.js@6.3.0
 
 devDependencies:
   pixi-filters: 4.1.6
@@ -1202,8 +1202,8 @@ packages:
       '@pixi/utils': 6.3.0_144ef662441eafe6efbce13303d1e8b8
     dev: false
 
-  /pixi6-after-effects/1.0.11_pixi.js@6.3.0:
-    resolution: {integrity: sha512-5ONRE6mzzm3IFeVM36mnbgd4RuG89L+io3lpTWXIfso1WfSMaFYyn1xQ+d7K49B7jhHODCbFexGcIr7D555vmg==}
+  /pixi6-after-effects/1.0.12_pixi.js@6.3.0:
+    resolution: {integrity: sha512-hoMVl+3gsxLhNoq550uigltGH1pgI2mF0Mys5eWASkvcGGrSXbnGbirYDwHO/bYfHGtnksoJ8/sYpZ8NKKGQLA==}
     peerDependencies:
       pixi.js: '6'
     dependencies:

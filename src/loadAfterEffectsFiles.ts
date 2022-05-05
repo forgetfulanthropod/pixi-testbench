@@ -2,7 +2,7 @@ import Testbench from "./TestBench"
 import * as PIXI from "pixi.js"
 import { Filter, Sprite } from "pixi.js"
 import { DisplayMeta } from "./TestBench"
-import { AEDataLoader, AfterEffects } from 'pixi6-after-effects/dist'
+import { AEDataLoader, AfterEffects } from 'pixi6-after-effects'
 import { FileNamesAndUrls } from "./loadZip"
 // import { FileNamesAndUrls } from "./bindFileDragNDrop"
 

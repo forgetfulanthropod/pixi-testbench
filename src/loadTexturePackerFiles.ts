@@ -8,17 +8,14 @@ export async function loadTexturePackerFiles(files: FileNamesAndUrls, app: Testb
     const jsonFile = files.find(file => file.name.includes('.json'))!
     const pngFile = files.find(file => file.name.includes('.png'))!
 
-    // const spritesheetData = (await (await fetch(jsonFile.url)).json())?.frames
     const spritesheetData = await (await fetch(jsonFile.url)).json()
     const baseTexture = BaseTexture.from(pngFile.url)
 
-    // Loader.shared.add({loadType: LoaderResource.LOAD_TYPE.})
 
     new Loader().add(jsonFile.url).load(
         (_, resources) => console.log('loaded!!', { resources })
     )
 
-    // await new Promise(resolve => setTimeout(resolve, 1000))
     console.log({ spritesheetData })
 
     const sheet = new Spritesheet(

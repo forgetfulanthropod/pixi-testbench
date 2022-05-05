@@ -8,17 +8,17 @@ import displacementMapUrl from "/images/displacement_map.png"
 import lightMapUrl from "/images/lightmap.png"
 import colorMapUrl from "/images/colormap.png"
 
-import { bindFileDragNDrop } from "./bindFileDragging"
+import { bindFileDragNDrop } from "./bindFileDragNDrop"
 
 //@ts-expect-error
 window.PIXI = PIXI
 
 const app = new Testbench()
 
-export type Manifest = {name: string, url: string}[]
+export type Manifest = { name: string, url: string }[]
 
 export const manifest: Manifest = [
-    
+
     { name: "background", url: backgroundUrl },
     { name: "map", url: displacementMapUrl },
     { name: "lightmap", url: lightMapUrl },

@@ -13,7 +13,7 @@ import {
     filters as externalFilters,
     Filter
 } from 'pixi.js'
-import { screenWidth, screenHeight } from './bindFileDragging'
+import { screenWidth, screenHeight } from './bindFileDragNDrop'
 import { Manifest } from './main'
 
 const { EventEmitter } = utils

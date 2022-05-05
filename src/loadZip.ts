@@ -2,6 +2,7 @@ import Testbench from "./TestBench"
 import * as zip from "@zip.js/zip.js"
 import { loadAfterEffectsFiles } from "./loadAfterEffectsFiles"
 import { loadSpineFiles } from "./loadSpineFiles"
+import { loadTexturePackerFiles } from "./loadTexturePackerFiles"
 
 export type FileNamesAndUrls = { name: string, url: string }[]
 
@@ -28,12 +29,25 @@ export async function loadZip(file: File, app: Testbench) {
             })
     )
 
-    const spineOnlyFile = files.find(file => file.name.includes('.atlas'))!
-    if (spineOnlyFile != null)
+    if (theseAreSpineFiles(files))
         await loadSpineFiles(files, app)
-    else {
+    else if (await theseAreTexturePackerFiles(files)) {
+        loadTexturePackerFiles(files, app)
+    } else {
         await loadAfterEffectsFiles(files, app)
     }
+}
+
+function theseAreSpineFiles(files: FileNamesAndUrls) {
+    return files.find(file => file.name.includes('.atlas')) != null
+}
+
+async function theseAreTexturePackerFiles(files: FileNamesAndUrls) {
+    const file = files.find(file => file.name.includes('.json'))!
+
+    const data = await (await fetch(file.url)).json()
+
+    return data?.meta?.app?.includes?.('texturepacker')
 }
 
 async function getURL(entry: zip.Entry, options = {}) {
@@ -45,6 +59,7 @@ async function getURL(entry: zip.Entry, options = {}) {
         )
     )
 }
+
 function getEntries(file: Blob, options: zip.ZipReaderGetEntriesOptions): Promise<zip.Entry[]> {
     return new zip.ZipReader(new zip.BlobReader(file)).getEntries(options)
 }

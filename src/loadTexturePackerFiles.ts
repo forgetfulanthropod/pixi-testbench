@@ -1,6 +1,8 @@
-import Testbench from "./TestBench"
+import Testbench, { DisplayMeta } from "./TestBench"
 import { FileNamesAndUrls } from "./loadZip"
-import { AnimatedSprite, BaseTexture, Framebuffer, Loader, LoaderResource, Spritesheet } from "pixi.js"
+import { AnimatedSprite, BaseTexture, Filter, Loader, Spritesheet } from "pixi.js"
+
+import { det } from "@pixi/core"
 
 export async function loadTexturePackerFiles(files: FileNamesAndUrls, app: Testbench) {
     const jsonFile = files.find(file => file.name.includes('.json'))!
@@ -12,16 +14,21 @@ export async function loadTexturePackerFiles(files: FileNamesAndUrls, app: Testb
 
     // Loader.shared.add({loadType: LoaderResource.LOAD_TYPE.})
 
+    new Loader().add(jsonFile.url).load(
+        (_, resources) => console.log('loaded!!', { resources })
+    )
 
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    // await new Promise(resolve => setTimeout(resolve, 1000))
     console.log({ spritesheetData })
 
     const sheet = new Spritesheet(
         baseTexture,
-        spritesheetData
+        spritesheetData,
+        'reolved'
     )
 
-    console.log({ sheet })
+    sheet.parse(textures => console.log({ textures }))
+
 
     const animation = Object.values(sheet.animations)[0]
 
@@ -29,5 +36,27 @@ export async function loadTexturePackerFiles(files: FileNamesAndUrls, app: Testb
 
     const animatedSprite = new AnimatedSprite(animation)
 
+    animatedSprite.play()
+
     app.filteredContainer.addChild(animatedSprite)
+
+    app.addNewImportControls({
+        name: jsonFile.name,
+        get(): DisplayMeta {
+            return {
+                x: animatedSprite.x,
+                y: animatedSprite.y,
+                scale: animatedSprite.scale.x,
+            }
+        },
+        set(d: DisplayMeta) {
+            animatedSprite.x = d.x
+            animatedSprite.y = d.y
+
+            animatedSprite.scale.set(d.scale, Math.abs(d.scale))
+        },
+        applyFilters(filters: Filter[]) {
+            animatedSprite.filters = filters
+        }
+    })
 }

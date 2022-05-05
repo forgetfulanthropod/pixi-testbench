@@ -1,23 +1,23 @@
 {
-    "name": "pixi-testbench",
-    "private": true,
-    "version": "0.0.0",
-    "scripts": {
-        "dev": "vite --port=3003",
-        "build": "tsc && vite build",
-        "preview": "vite preview"
-    },
-    "dependencies": {
-        "@pixi-spine/runtime-4.0": "^3.0.13",
-        "@zip.js/zip.js": "^2.4.10",
-        "lil-gui": "^0.16.1",
-        "pixi-spine": "^3.0.13",
-        "pixi.js": "^6.0.0-X",
-        "pixi6-after-effects": "^1.0.12"
-    },
-    "devDependencies": {
-        "pixi-filters": "4.1.6",
-        "typescript": "^4.5.4",
-        "vite": "^2.9.5"
-    }
+  "name": "pixi-testbench",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite --port=3003",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@pixi-spine/runtime-4.0": "^3.0.13",
+    "@zip.js/zip.js": "^2.4.10",
+    "lil-gui": "^0.16.1",
+    "pixi-spine": "^3.0.13",
+    "pixi.js": "^6.0.0-X",
+    "pixi6-after-effects": "^1.0.12"
+  },
+  "devDependencies": {
+    "pixi-filters": "4.1.6",
+    "typescript": "^4.5.4",
+    "vite": "^2.9.5"
+  }
 }

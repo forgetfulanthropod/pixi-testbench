@@ -166,7 +166,7 @@ export default class Testbench extends Application {
         })
 
         if (displayMeta.animationSpeed) {
-            folder.add(displayMeta, 'animationSpeed', 0, 2).onChange((animationSpeed: number) => {
+            folder.add(displayMeta, 'animationSpeed', 0, 10).onChange((animationSpeed: number) => {
                 item.set({ ...displayMeta, animationSpeed })
             })
         }

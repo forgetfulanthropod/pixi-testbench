@@ -68,17 +68,7 @@ export async function loadAfterEffectsFiles(files: FileNamesAndUrls, app: Testbe
             if (data == null)
                 throw new Error('null data :/')
 
-            const ae = AfterEffects.fromData(data, {})
-            ae.scale.set(1)
-            ae.on('completed', (o) => {
-                console.log('completed!', o)
-            })
-            app.filteredContainer.addChild(ae)
-            ae.play(true)
-
-            PIXI.Ticker.shared.add((_dt) => {
-                ae.update(Date.now())
-            })
+            let ae = getAE()
 
             app.addNewImportControls({
                 name: jsonFile.name,
@@ -91,17 +81,37 @@ export async function loadAfterEffectsFiles(files: FileNamesAndUrls, app: Testbe
                     }
                 },
                 set(d: DisplayMeta) {
+                    if (d.animationSpeed) {
+                        ae.parent.removeChild(ae)
+                        const frameRate = d.animationSpeed * app.ticker.FPS
+                        // console.log(`new AE with framerate: ${frameRate}`)
+                        ae = getAE(frameRate)
+                    }
+
                     ae.x = d.x
                     ae.y = d.y
 
                     ae.scale.set(d.scale, Math.abs(d.scale))
 
-                    if (d.animationSpeed) 
                 },
                 applyFilters(filters: Filter[]) {
                     ae.filters = filters
                 }
             })
+
+            function getAE(frameRate?: number) {
+                const ae = AfterEffects.fromData({ ...data, ...frameRate ? { fr: frameRate } : {} }, {})
+                ae.scale.set(1)
+
+                app.filteredContainer.addChild(ae)
+                ae.play(true)
+
+                PIXI.Ticker.shared.add((_dt) => {
+                    ae.update(Date.now())
+                })
+
+                return ae
+            }
         },
         (err) => {
             console.error('load error', err)

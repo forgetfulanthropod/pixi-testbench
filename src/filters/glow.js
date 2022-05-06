@@ -12,10 +12,12 @@ export default function ()
         }],
         oncreate(folder)
         {
+            folder.add(this, 'distance', 0, 100);
             folder.add(this, 'innerStrength', 0, 20);
             folder.add(this, 'outerStrength', 0, 20);
             folder.addColor(this, 'color');
             folder.add(this, 'knockout');
+            folder.add(this, 'quality', 0, 1);
         },
     });
 }

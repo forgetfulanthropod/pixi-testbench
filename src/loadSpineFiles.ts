@@ -5,6 +5,7 @@ import { AtlasAttachmentLoader, Skeleton, SkeletonData, SkeletonJson } from "@pi
 import { DisplayMeta } from "./TestBench"
 import { screenHeight, screenWidth } from "./bindFileDragNDrop"
 import { FileNamesAndUrls } from "./loadZip"
+import { center } from "./util"
 
 export async function loadSpineFiles(files: FileNamesAndUrls, app: Testbench) {
     const jsonFile = files.find(file => file.name.includes('.json'))!
@@ -59,6 +60,7 @@ export async function loadSpineFiles(files: FileNamesAndUrls, app: Testbench) {
         toggleAnimation()
     })
 
+    center(app, animation)
     app.addNewImportControls({
         name: jsonFile.name,
         get(): DisplayMeta {

@@ -7,6 +7,7 @@ import { Filter } from "pixi.js"
 import { DisplayMeta } from "./TestBench"
 
 import { loadZip } from "./loadZip"
+import { center } from "./util"
 
 
 export let screenHeight = 0 //document.getElementById('container').getBoundingClientRect().height
@@ -92,6 +93,7 @@ async function loadPng(file: File, app: Testbench) {
 
     app.filteredContainer.addChild(sprite)
 
+    center(app, sprite)
     app.addNewImportControls({
         name: file.name,
         get(): DisplayMeta {

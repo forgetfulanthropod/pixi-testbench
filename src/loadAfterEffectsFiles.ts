@@ -4,6 +4,7 @@ import { Filter, Sprite } from "pixi.js"
 import { DisplayMeta } from "./TestBench"
 import { AEDataLoader, AfterEffects } from 'pixi6-after-effects'
 import { FileNamesAndUrls } from "./loadZip"
+import { center } from "./util"
 // import { FileNamesAndUrls } from "./bindFileDragNDrop"
 
 // type AEClick = { target: AfterEffects }
@@ -70,6 +71,7 @@ export async function loadAfterEffectsFiles(files: FileNamesAndUrls, app: Testbe
 
             let ae = getAE()
 
+            center(app, ae)
             app.addNewImportControls({
                 name: jsonFile.name,
                 get(): DisplayMeta {

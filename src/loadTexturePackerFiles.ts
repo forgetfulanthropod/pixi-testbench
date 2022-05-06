@@ -1,6 +1,7 @@
 import Testbench, { DisplayMeta } from "./TestBench"
 import { FileNamesAndUrls } from "./loadZip"
 import { AnimatedSprite, BaseTexture, Filter, Loader, Spritesheet } from "pixi.js"
+import { center } from "./util"
 
 export async function loadTexturePackerFiles(files: FileNamesAndUrls, app: Testbench) {
     const jsonFile = files.find(file => file.name.includes('.json'))!
@@ -38,6 +39,7 @@ export async function loadTexturePackerFiles(files: FileNamesAndUrls, app: Testb
 
     app.filteredContainer.addChild(animatedSprite)
 
+    center(app, animatedSprite)
     app.addNewImportControls({
         name: jsonFile.name,
         get(): DisplayMeta {

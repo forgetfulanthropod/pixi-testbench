@@ -47,7 +47,7 @@ export default class Testbench extends Application {
     padding: any
     bounds: any
     importsFolder: any
-    gui: any
+    gui: GUI
 
     constructor() {
         const gui = new GUI()
@@ -369,6 +369,7 @@ export default class Testbench extends Application {
 
         if (options.oncreate) {
             options.oncreate.call(filter, folder)
+            // folder.adsd
         }
 
         this.sceneFilters.push(filter)

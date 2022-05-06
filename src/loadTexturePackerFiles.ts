@@ -1,6 +1,6 @@
 import Testbench, { DisplayMeta } from "./TestBench"
 import { FileNamesAndUrls } from "./loadZip"
-import { AnimatedSprite, BaseTexture, Filter, Loader, Spritesheet, Ticker } from "pixi.js"
+import { AnimatedSprite, BaseTexture, Filter, Loader, Spritesheet } from "pixi.js"
 
 export async function loadTexturePackerFiles(files: FileNamesAndUrls, app: Testbench) {
     const jsonFile = files.find(file => file.name.includes('.json'))!

@@ -12,7 +12,6 @@ import {
     utils,
     filters as externalFilters,
     Filter,
-    Ticker
 } from 'pixi.js'
 import { screenWidth, screenHeight } from './bindFileDragNDrop'
 import { Manifest } from './main'

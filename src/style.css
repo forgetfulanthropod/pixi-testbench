@@ -75,10 +75,20 @@ body {
     color: #ea4080;
 }
 
-#add-another {
+#fps {
     position: absolute;
     left: 10px;
     top: 10px;
+    color: #ddd;
+    text-shadow: black;
+    font-family: monospace;
+}
+
+#add-another {
+    position: absolute;
+    left: 10px;
+    top: 28px;
+    font-size: 22px;
     color: white;
     text-shadow: black;
     cursor: pointer;

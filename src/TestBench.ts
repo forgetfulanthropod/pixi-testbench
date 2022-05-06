@@ -11,7 +11,8 @@ import {
     // TilingSprite,
     utils,
     filters as externalFilters,
-    Filter
+    Filter,
+    Ticker
 } from 'pixi.js'
 import { screenWidth, screenHeight } from './bindFileDragNDrop'
 import { Manifest } from './main'
@@ -22,6 +23,7 @@ export type DisplayMeta = {
     x: number
     y: number
     scale: number
+    animationSpeed?: number // 1 is normal
 }
 type DisplayItem = {
     name: string
@@ -61,7 +63,13 @@ export default class Testbench extends Application {
             height: initHeight,
             autoStart: false,
             backgroundColor: 0x000000,
+        })
+        this.ticker.maxFPS = 1000 / 33 //min delta (max fps)
+        this.ticker.minFPS = 1000 / 30 //max delta (min fps)
 
+        const fpsEl = document.getElementById('fps')!
+        this.ticker.add(_ => {
+            fpsEl.innerText = `${Math.round(app.ticker.FPS)} frames per second`
         })
 
         this.domElement = domElement
@@ -143,19 +151,25 @@ export default class Testbench extends Application {
 
         // this.gui.folders = [...]
 
-        const xyScale = item.get()
+        const displayMeta = item.get()
 
-        folder.add(xyScale, 'x', -screenWidth, screenWidth).onChange((x: number) => {
-            item.set({ ...xyScale, x })
+        folder.add(displayMeta, 'x', -screenWidth, screenWidth).onChange((x: number) => {
+            item.set({ ...displayMeta, x })
         })
 
-        folder.add(xyScale, 'y', -screenHeight, screenHeight).onChange((y: number) => {
-            item.set({ ...xyScale, y })
+        folder.add(displayMeta, 'y', -screenHeight, screenHeight).onChange((y: number) => {
+            item.set({ ...displayMeta, y })
         })
 
-        folder.add(xyScale, 'scale', -1.2, 1.2).onChange((scale: number) => {
-            item.set({ ...xyScale, scale })
+        folder.add(displayMeta, 'scale', -1.2, 1.2).onChange((scale: number) => {
+            item.set({ ...displayMeta, scale })
         })
+
+        if (displayMeta.animationSpeed) {
+            folder.add(displayMeta, 'animationSpeed', 0, 2).onChange((animationSpeed: number) => {
+                item.set({ ...displayMeta, animationSpeed })
+            })
+        }
 
         folder.add({ filtersOnlyHere: false }, 'filtersOnlyHere').onChange((only: boolean) => {
             if (only) {

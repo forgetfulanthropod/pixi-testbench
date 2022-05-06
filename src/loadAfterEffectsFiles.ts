@@ -87,6 +87,7 @@ export async function loadAfterEffectsFiles(files: FileNamesAndUrls, app: Testbe
                         x: ae.x,
                         y: ae.y,
                         scale: ae.scale.x,
+                        animationSpeed: ae.frameRate / app.ticker.FPS
                     }
                 },
                 set(d: DisplayMeta) {
@@ -94,6 +95,8 @@ export async function loadAfterEffectsFiles(files: FileNamesAndUrls, app: Testbe
                     ae.y = d.y
 
                     ae.scale.set(d.scale, Math.abs(d.scale))
+
+                    if (d.animationSpeed) 
                 },
                 applyFilters(filters: Filter[]) {
                     ae.filters = filters

@@ -1,8 +1,6 @@
 import Testbench, { DisplayMeta } from "./TestBench"
 import { FileNamesAndUrls } from "./loadZip"
-import { AnimatedSprite, BaseTexture, Filter, Loader, Spritesheet } from "pixi.js"
-
-import { det } from "@pixi/core"
+import { AnimatedSprite, BaseTexture, Filter, Loader, Spritesheet, Ticker } from "pixi.js"
 
 export async function loadTexturePackerFiles(files: FileNamesAndUrls, app: Testbench) {
     const jsonFile = files.find(file => file.name.includes('.json'))!
@@ -20,8 +18,7 @@ export async function loadTexturePackerFiles(files: FileNamesAndUrls, app: Testb
 
     const sheet = new Spritesheet(
         baseTexture,
-        spritesheetData,
-        'reolved'
+        spritesheetData
     )
 
     sheet.parse(textures => console.log({ textures }))
@@ -32,6 +29,10 @@ export async function loadTexturePackerFiles(files: FileNamesAndUrls, app: Testb
     if (animation == null) throw new Error('looks like no animations from that data...')
 
     const animatedSprite = new AnimatedSprite(animation)
+
+    animatedSprite.animationSpeed = 30 / app.ticker.FPS
+
+    console.log({ animationSpeed: animatedSprite.animationSpeed })
 
     animatedSprite.play()
 
@@ -44,6 +45,7 @@ export async function loadTexturePackerFiles(files: FileNamesAndUrls, app: Testb
                 x: animatedSprite.x,
                 y: animatedSprite.y,
                 scale: animatedSprite.scale.x,
+                animationSpeed: animatedSprite.animationSpeed
             }
         },
         set(d: DisplayMeta) {
@@ -51,6 +53,8 @@ export async function loadTexturePackerFiles(files: FileNamesAndUrls, app: Testb
             animatedSprite.y = d.y
 
             animatedSprite.scale.set(d.scale, Math.abs(d.scale))
+
+            if (d.animationSpeed) animatedSprite.animationSpeed = d.animationSpeed
         },
         applyFilters(filters: Filter[]) {
             animatedSprite.filters = filters

@@ -62,9 +62,9 @@ export default class Testbench extends Application {
             height: initHeight,
             autoStart: false,
             backgroundColor: 0x000000,
+            antialias: true,
         })
-        this.ticker.maxFPS = 1000 / 33 //min delta (max fps)
-        this.ticker.minFPS = 1000 / 30 //max delta (min fps)
+        this.ticker.maxFPS = 30
 
         const fpsEl = document.getElementById('fps')!
         this.ticker.add(_ => {

@@ -85,7 +85,8 @@ export async function loadSpineFiles(files: FileNamesAndUrls, app: Testbench) {
         if (animationIndex >= skeleton.animations.length)
             animationIndex = 0
 
-        animation.state.setAnimation(0, skeleton.animations[animationIndex].name, true)
+        const track = animation.state.setAnimation(0, skeleton.animations[animationIndex].name, true)
+        track.mixDuration = 1
 
         animationIndex++
     }

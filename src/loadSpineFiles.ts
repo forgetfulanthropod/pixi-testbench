@@ -1,7 +1,7 @@
 import Testbench from "./TestBench"
 import { BaseTexture, Filter } from "pixi.js"
-import { Spine, TextureAtlas } from "pixi-spine"
-import { AtlasAttachmentLoader, Skeleton, SkeletonData, SkeletonJson } from "@pixi-spine/runtime-4.0"
+import { ISkeletonData, Spine, TextureAtlas } from "pixi-spine"
+import { AtlasAttachmentLoader, Skeleton, SkeletonData, SkeletonJson } from "@pixi-spine/runtime-4.1"
 import { DisplayMeta } from "./TestBench"
 import { screenHeight, screenWidth } from "./bindFileDragNDrop"
 import { FileNamesAndUrls } from "./loadZip"
@@ -33,9 +33,9 @@ export async function loadSpineFiles(files: FileNamesAndUrls, app: Testbench) {
         await fetch(jsonFile.url).then(r => r.json())
     )
 
-    console.log(skeleton)
+    console.log({ skeleton })
 
-    const animation = new Spine(skeleton)
+    const animation = new Spine(skeleton as ISkeletonData)
 
     animation.scale.set(.5)
 

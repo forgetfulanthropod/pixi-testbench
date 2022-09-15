@@ -1,21 +1,21 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@pixi-spine/runtime-4.0': ^3.0.13
+  '@pixi-spine/runtime-4.1': ^3.1.0
   '@zip.js/zip.js': ^2.4.10
   lil-gui: ^0.16.1
   pixi-filters: 4.1.6
-  pixi-spine: ^3.0.13
+  pixi-spine: ^3.1.0
   pixi.js: ^6.0.0-X
   pixi6-after-effects: ^1.0.12
   typescript: ^4.5.4
   vite: ^2.9.5
 
 dependencies:
-  '@pixi-spine/runtime-4.0': 3.0.13
+  '@pixi-spine/runtime-4.1': 3.1.0
   '@zip.js/zip.js': 2.4.10
   lil-gui: 0.16.1
-  pixi-spine: 3.0.13
+  pixi-spine: 3.1.0
   pixi.js: 6.3.0
   pixi6-after-effects: 1.0.12_pixi.js@6.3.0
 
@@ -26,8 +26,8 @@ devDependencies:
 
 packages:
 
-  /@pixi-spine/base/3.0.13:
-    resolution: {integrity: sha512-JKgK+nw81/UwoRS5YBZhU5nIHsYGO5u3HY2QsKRJjvgz2EBLYKNhQ8KpVmx8C9CV9VnmectIjKlHkMFDiP3/Dg==}
+  /@pixi-spine/base/3.1.0:
+    resolution: {integrity: sha512-4QRXfokT4LE78r446VXwIjgAEKvXJgpwiVcGzArOQ+m8JeJkfFr2vR6ifP6uvNPZIOZ+1E3DF3DVNxIULw71Qw==}
     peerDependencies:
       '@pixi/constants': ^6.1.0
       '@pixi/core': ^6.1.0
@@ -36,12 +36,14 @@ packages:
       '@pixi/math': ^6.1.0
       '@pixi/mesh': ^6.1.0
       '@pixi/mesh-extras': ^6.1.0
+      '@pixi/runner': ^6.1.0
+      '@pixi/settings': ^6.1.0
       '@pixi/sprite': ^6.1.0
       '@pixi/utils': ^6.1.0
     dev: false
 
-  /@pixi-spine/loader-base/3.0.13:
-    resolution: {integrity: sha512-3sSWMgCRzZ0fTSx5rGMWlqYe83dCiCQ/zWOay/pbFElYywaCN06+5g0NDRyPypMwlfMjjlq2VQ2RNBgI7RtDYw==}
+  /@pixi-spine/loader-base/3.1.0:
+    resolution: {integrity: sha512-wSDMRefZedBhRVzRg+N1DqGoJjedaSMW5gh3lHKPPY0Qeb72aa9J3U0aTv82+tTXYN27DyuVjwpm0Qp3r502bA==}
     peerDependencies:
       '@pixi/app': ^6.1.0
       '@pixi/constants': ^6.1.0
@@ -50,26 +52,28 @@ packages:
       '@pixi/loaders': ^6.1.0
       resource-loader: ~3.0.1
     dependencies:
-      '@pixi-spine/base': 3.0.13
+      '@pixi-spine/base': 3.1.0
     transitivePeerDependencies:
       - '@pixi/graphics'
       - '@pixi/math'
       - '@pixi/mesh'
       - '@pixi/mesh-extras'
+      - '@pixi/runner'
+      - '@pixi/settings'
       - '@pixi/sprite'
       - '@pixi/utils'
     dev: false
 
-  /@pixi-spine/loader-uni/3.0.13:
-    resolution: {integrity: sha512-iUEAn6F1mPOzIuc3eDXKa/+lX5ZPFI5e9hS08yggLWimrfgOTMSenLsg5eC0EokMfQwjsMeVGWz2Bst4LeHxuA==}
+  /@pixi-spine/loader-uni/3.1.0:
+    resolution: {integrity: sha512-102slpDqxvT2RcDN1jS2hWHZqOLPtRC5UQfk0ravTysepLGt9YV5b1EWFA0Lt78AoHVADV5fNjxWPvbAisnmgg==}
     peerDependencies:
       '@pixi/loaders': ^6.1.0
     dependencies:
-      '@pixi-spine/base': 3.0.13
-      '@pixi-spine/loader-base': 3.0.13
-      '@pixi-spine/runtime-3.7': 3.0.13
-      '@pixi-spine/runtime-3.8': 3.0.13
-      '@pixi-spine/runtime-4.0': 3.0.13
+      '@pixi-spine/base': 3.1.0
+      '@pixi-spine/loader-base': 3.1.0
+      '@pixi-spine/runtime-3.7': 3.1.0
+      '@pixi-spine/runtime-3.8': 3.1.0
+      '@pixi-spine/runtime-4.1': 3.1.0
     transitivePeerDependencies:
       - '@pixi/app'
       - '@pixi/constants'
@@ -79,58 +83,66 @@ packages:
       - '@pixi/math'
       - '@pixi/mesh'
       - '@pixi/mesh-extras'
+      - '@pixi/runner'
+      - '@pixi/settings'
       - '@pixi/sprite'
       - '@pixi/utils'
       - resource-loader
     dev: false
 
-  /@pixi-spine/runtime-3.7/3.0.13:
-    resolution: {integrity: sha512-EoXz4997WPpqttNEmyCaFzY2lsv15QXahEfF5+EueLJaqcW6uiLzK8z7zWUA5FJ3UTeb3B9tvpT7IibLD/dltw==}
+  /@pixi-spine/runtime-3.7/3.1.0:
+    resolution: {integrity: sha512-jXyu7wLa3141YYOnYXhimrLkKWTdKZDfi9H8HwRqFieia5Exrgr7VNyF692UlFjzQlrGwj2PSkm5oNAC77rs5w==}
     peerDependencies:
       '@pixi/constants': ^6.1.0
       '@pixi/math': ^6.1.0
     dependencies:
-      '@pixi-spine/base': 3.0.13
+      '@pixi-spine/base': 3.1.0
     transitivePeerDependencies:
       - '@pixi/core'
       - '@pixi/display'
       - '@pixi/graphics'
       - '@pixi/mesh'
       - '@pixi/mesh-extras'
+      - '@pixi/runner'
+      - '@pixi/settings'
       - '@pixi/sprite'
       - '@pixi/utils'
     dev: false
 
-  /@pixi-spine/runtime-3.8/3.0.13:
-    resolution: {integrity: sha512-Ve8WCqwMg4FzpUEO0kMlf0IuKum96pxLQi1Kv8J1fIGqtzsJUrpS3eAUfWo9CMdWT8YPOOGkMdjKl7ZE5ZLJHA==}
+  /@pixi-spine/runtime-3.8/3.1.0:
+    resolution: {integrity: sha512-4j/LZdtaqo/H31wdi4ECMz2CaJRxUAe3IWUEhMwl2DqM3V3WMndedhdvy2W8u1v6A6nLolUOLe7TtlskW8vQsg==}
     peerDependencies:
       '@pixi/constants': ^6.1.0
       '@pixi/math': ^6.1.0
     dependencies:
-      '@pixi-spine/base': 3.0.13
+      '@pixi-spine/base': 3.1.0
     transitivePeerDependencies:
       - '@pixi/core'
       - '@pixi/display'
       - '@pixi/graphics'
       - '@pixi/mesh'
       - '@pixi/mesh-extras'
+      - '@pixi/runner'
+      - '@pixi/settings'
       - '@pixi/sprite'
       - '@pixi/utils'
     dev: false
 
-  /@pixi-spine/runtime-4.0/3.0.13:
-    resolution: {integrity: sha512-KUihDa4D8m3YS/OEUJjoQpReNUrmgnjCSGoPuoNB5bzKgGSDENSmra9gDaT4CuyDkvnM6Q29MTx2PirUM1N/LQ==}
+  /@pixi-spine/runtime-4.1/3.1.0:
+    resolution: {integrity: sha512-KKHQAVRu9CaNrLNPjXwAVggVehBy2ChCE3QL5EwT5oVOt8uYhZ3f1UhMFDieqtz+QcqO8jUppfcsvgtFbTnHBQ==}
     peerDependencies:
       '@pixi/constants': ^6.1.0
       '@pixi/math': ^6.1.0
     dependencies:
-      '@pixi-spine/base': 3.0.13
+      '@pixi-spine/base': 3.1.0
     transitivePeerDependencies:
       - '@pixi/core'
       - '@pixi/display'
       - '@pixi/graphics'
       - '@pixi/mesh'
       - '@pixi/mesh-extras'
+      - '@pixi/runner'
+      - '@pixi/settings'
       - '@pixi/sprite'
       - '@pixi/utils'
     dev: false
@@ -1138,15 +1150,15 @@ packages:
       - '@pixi/utils'
     dev: true
 
-  /pixi-spine/3.0.13:
-    resolution: {integrity: sha512-OvnkRV1VlNroaoYdIY+srcYfnJLl0v1y616eZNqv4fpt1WF2iTeC63MhIjA/GlLy3FLFghQF4isVq2baJ0IL9w==}
+  /pixi-spine/3.1.0:
+    resolution: {integrity: sha512-pcNgpq+ltULSenzLCqbdO0eH5NRhNcMXkXJw4Zdec+vfciUctXj5Ho/aDdTt0b5PlW4TzTYRfaHdu5ZhTv77ew==}
     dependencies:
-      '@pixi-spine/base': 3.0.13
-      '@pixi-spine/loader-base': 3.0.13
-      '@pixi-spine/loader-uni': 3.0.13
-      '@pixi-spine/runtime-3.7': 3.0.13
-      '@pixi-spine/runtime-3.8': 3.0.13
-      '@pixi-spine/runtime-4.0': 3.0.13
+      '@pixi-spine/base': 3.1.0
+      '@pixi-spine/loader-base': 3.1.0
+      '@pixi-spine/loader-uni': 3.1.0
+      '@pixi-spine/runtime-3.7': 3.1.0
+      '@pixi-spine/runtime-3.8': 3.1.0
+      '@pixi-spine/runtime-4.1': 3.1.0
     transitivePeerDependencies:
       - '@pixi/app'
       - '@pixi/constants'
@@ -1157,6 +1169,8 @@ packages:
       - '@pixi/math'
       - '@pixi/mesh'
       - '@pixi/mesh-extras'
+      - '@pixi/runner'
+      - '@pixi/settings'
       - '@pixi/sprite'
       - '@pixi/utils'
       - resource-loader

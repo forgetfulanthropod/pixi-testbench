@@ -22,6 +22,7 @@ export async function loadSpineFiles(files: FileNamesAndUrls, app: Testbench) {
             new TextureAtlas(
                 await fetch(atlasFile.url).then(r => r.text()),
                 (path, loaderFunction) => {
+                    console.log({ files, path })
 
                     const imageUrl = files.find(file => file.name === path)!.url
 
